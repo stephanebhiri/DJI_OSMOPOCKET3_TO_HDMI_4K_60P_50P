@@ -50,6 +50,26 @@ Direct NV12 rendering to hardware overlay plane, bypassing RGB conversion.
 
 ## Installation
 
+### Quick Install (Automated)
+
+```bash
+git clone https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P.git
+cd DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P
+./install.sh
+```
+
+The script will:
+1. Install all prerequisites
+2. Build and install Rockchip MPP
+3. Build and install gstreamer-rockchip (mppvideodec)
+4. Build and install libuvch264src (BELABOX fork)
+5. Install udev rules
+6. Install systemd service
+
+After installation, you must configure plane-id, connector-id, and audio devices (see post-install instructions).
+
+### Manual Installation
+
 ### Prerequisites
 
 ```bash
@@ -62,13 +82,22 @@ sudo apt-get install -y \
     gstreamer1.0-alsa \
     libgstreamer1.0-dev \
     libgstreamer-plugins-base1.0-dev \
+    libgstreamer-plugins-bad1.0-dev \
+    libdrm-dev \
     libusb-1.0-0-dev \
     libudev-dev \
     cmake \
     meson \
     ninja-build \
     pkg-config \
-    git
+    git \
+    build-essential \
+    autoconf \
+    automake \
+    libtool \
+    autopoint \
+    gettext \
+    libdrm-tests
 ```
 
 ### 1. Install Rockchip MPP
@@ -77,10 +106,14 @@ sudo apt-get install -y \
 cd /tmp
 git clone https://github.com/rockchip-linux/mpp.git rockchip-mpp
 cd rockchip-mpp
+# Tested with commit 4ed4f778 (2025-09-10)
 cmake -DRKPLATFORM=ON -DHAVE_DRM=ON
 make -j$(nproc)
 sudo make install
 sudo ldconfig
+
+# Verify installation
+ldconfig -p | grep rockchip_mpp
 ```
 
 ### 2. Install gstreamer-rockchip
@@ -93,6 +126,9 @@ meson setup build
 cd build
 meson compile
 sudo meson install
+
+# Verify mppvideodec plugin is installed
+gst-inspect-1.0 mppvideodec
 ```
 
 ### 3. Install libuvch264src (BELABOX fork)
@@ -101,6 +137,7 @@ sudo meson install
 cd /tmp
 git clone https://github.com/BELABOX/gstlibuvch264src.git
 cd gstlibuvch264src
+# Tested with commit 159222b "Implement negotiating framerate and resolution" (Jan 2025)
 
 # Build libuvc
 cd libuvc
@@ -115,6 +152,9 @@ cd ../../libuvch264src
 meson setup build --prefix=/usr
 meson compile -C build
 sudo meson install -C build
+
+# Verify libuvch264src plugin is installed
+gst-inspect-1.0 libuvch264src
 ```
 
 ### 4. Set DMA Heap Permissions
