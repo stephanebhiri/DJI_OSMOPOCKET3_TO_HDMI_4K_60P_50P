@@ -1,0 +1,2 @@
+# Restart DJI streaming service when camera is reconnected
+ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="2ca3", ATTRS{idProduct}=="0023", RUN+="/bin/systemctl restart dji-h264-stream.service"

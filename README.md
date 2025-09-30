@@ -178,29 +178,23 @@ Adjust:
 
 ### 7. Install Systemd Service
 
+Copy files from repo:
 ```bash
-sudo tee /etc/systemd/system/dji-h264-stream.service << 'EOF'
-[Unit]
-Description=DJI Osmo Pocket 3 H264 4K 50fps Stream to HDMI with Audio
-After=network.target sound.target
-
-[Service]
-Type=simple
-User=root
-ExecStart=/usr/bin/gst-launch-1.0 libuvch264src index=0 ! video/x-h264,width=3840,height=2160,framerate=50/1 ! h264parse ! mppvideodec ! kmssink plane-id=73 connector-id=217 sync=false alsasrc device=hw:4,0 ! audioconvert ! audioresample ! alsasink device=hw:1,0
-Restart=always
-RestartSec=5
-Nice=-10
-IOSchedulingClass=realtime
-
-[Install]
-WantedBy=multi-user.target
-EOF
+sudo cp dji-stream.sh /usr/local/bin/
+sudo chmod +x /usr/local/bin/dji-stream.sh
+sudo cp dji-h264-stream.service /etc/systemd/system/
+sudo cp 99-dji-camera.rules /etc/udev/rules.d/
 
 sudo systemctl daemon-reload
+sudo udevadm control --reload-rules
 sudo systemctl enable dji-h264-stream.service
 sudo systemctl start dji-h264-stream.service
 ```
+
+The service will:
+- Auto-start on boot
+- Restart automatically on failure (3 second delay)
+- Restart when camera is reconnected (via udev rule)
 
 ## Troubleshooting
 
@@ -238,6 +232,14 @@ If CPU > 40%, hardware decode may not be working:
 ### Stride mismatch warnings
 
 Warnings like `mpp_buf_slot: mismatch h_stride_by_pixel` are normal and don't affect functionality. They indicate internal stride differences handled by MPP.
+
+### Camera reconnection not working
+
+If the stream doesn't restart after unplugging/replugging the camera:
+1. Check udev rule is installed: `ls /etc/udev/rules.d/99-dji-camera.rules`
+2. Reload udev: `sudo udevadm control --reload-rules`
+3. Test manually: `sudo systemctl restart dji-h264-stream.service`
+4. Check service status: `sudo systemctl status dji-h264-stream.service`
 
 ## Performance
 
