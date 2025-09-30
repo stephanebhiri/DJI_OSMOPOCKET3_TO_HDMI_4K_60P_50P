@@ -107,7 +107,8 @@ cd /tmp
 git clone https://github.com/rockchip-linux/mpp.git rockchip-mpp
 cd rockchip-mpp
 # Tested with commit 4ed4f778 (2025-09-10)
-cmake -DRKPLATFORM=ON -DHAVE_DRM=ON
+mkdir -p build && cd build
+cmake .. -DRKPLATFORM=ON -DHAVE_DRM=ON
 make -j$(nproc)
 sudo make install
 sudo ldconfig

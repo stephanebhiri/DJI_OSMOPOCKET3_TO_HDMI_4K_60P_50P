@@ -49,7 +49,8 @@ if [ -d "rockchip-mpp" ]; then
 fi
 git clone https://github.com/rockchip-linux/mpp.git rockchip-mpp
 cd rockchip-mpp
-cmake -DRKPLATFORM=ON -DHAVE_DRM=ON
+mkdir -p build && cd build
+cmake .. -DRKPLATFORM=ON -DHAVE_DRM=ON
 make -j$(nproc)
 sudo make install
 sudo ldconfig
