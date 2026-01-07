@@ -40,11 +40,27 @@ Après reboot, brancher la caméra DJI = ça marche! 🎥
 
 ---
 
+## 🎛️ Bouton GPIO - Toggle HDMI Mode (Optionnel)
+
+Basculer entre **1080i50** (entrelacé) et **1080p50** (progressif) avec un bouton physique:
+
+```bash
+chmod +x install-gpio-button.sh
+./install-gpio-button.sh
+```
+
+Connexion: **Pin 7 (GPIO3_A4) ──── Bouton ──── GND**
+
+📘 Guide complet: **[GPIO_BUTTON_GUIDE.md](GPIO_BUTTON_GUIDE.md)**
+
+---
+
 ## 📖 Documentation
 
 - **[INSTALL_GUIDE.md](INSTALL_GUIDE.md)** - Guide d'installation détaillé
 - **[WORKING_CONFIG.md](WORKING_CONFIG.md)** - Configuration technique complète
-- **[README.md](README.md)** - Documentation projet originale
+- **[GPIO_BUTTON_GUIDE.md](GPIO_BUTTON_GUIDE.md)** - Toggle HDMI mode avec bouton
+- **[README_DETAILED.md](README_DETAILED.md)** - Documentation projet originale
 
 ---
 

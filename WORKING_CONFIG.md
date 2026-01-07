@@ -4,12 +4,17 @@
 **Statut**: ✅ PARFAIT - NE PAS MODIFIER
 
 ## Résumé
-- Sortie HDMI: 1080i50 (ou 1080p50)
+- Sortie HDMI: 1080p50 (progressif) - **Mode par défaut recommandé**
+- Sortie alternative: 1080i50 (entrelacé) - **Disponible via bouton GPIO**
 - Vidéo source: 4K 50fps (3840x2160) depuis DJI Osmo Pocket 3
 - Décodage matériel: Rockchip MPP
 - CPU: ~25% d'utilisation
 - Latence: Très faible
 - Fluidité: Parfaite
+
+### 🔄 Basculer entre 1080i50 et 1080p50
+
+Voir **[GPIO_BUTTON_GUIDE.md](GPIO_BUTTON_GUIDE.md)** pour installer un bouton physique qui bascule entre les deux modes.
 
 ---
 
@@ -44,9 +49,30 @@ usbstoragequirks=0x2537:0x1066:u,0x2537:0x1068:u
 ```
 
 **Paramètres clés**:
-- `video=HDMI-A-1:1920x1080@50` - Force sortie HDMI 1080p50
+- `video=HDMI-A-1:1920x1080@50` - Force sortie HDMI **1080p50** (progressif)
+- `video=HDMI-A-1:1920x1080M@50eD` - Force sortie HDMI **1080i50** (entrelacé)
 - `usbcore.quirks=2ca3:0023:i` - Quirk USB pour DJI (tenté mais non efficace, peut être retiré)
 - `cma=256M` - Mémoire continue pour MPP
+
+#### 📺 Différence 1080i50 vs 1080p50
+
+| Paramètre | Mode | Description | Logs Kernel |
+|-----------|------|-------------|-------------|
+| `video=HDMI-A-1:1920x1080@50` | **1080p50** (progressif) | Image complète à chaque frame | `Update mode to 1920x1080p50` |
+| `video=HDMI-A-1:1920x1080M@50eD` | **1080i50** (entrelacé) | Lignes paires/impaires alternées | `Update mode to 1920x1080i50` |
+
+**Pourquoi le changement?**
+
+Lors du troubleshooting, le paramètre a été modifié de `1920x1080M@50eD` (entrelacé) vers `1920x1080@50` (progressif). Le mode progressif est généralement meilleur pour les écrans modernes (moins de flicker, image plus nette).
+
+**Pour revenir en 1080i50:**
+
+```bash
+# Méthode 1: Utiliser le bouton GPIO (voir GPIO_BUTTON_GUIDE.md)
+# Méthode 2: Manuellement
+sudo sed -i 's|video=HDMI-A-1:1920x1080@50|video=HDMI-A-1:1920x1080M@50eD|' /boot/armbianEnv.txt
+sudo reboot
+```
 
 ### 3. Pipeline GStreamer (/usr/local/bin/dji-stream.sh)
 ```bash
