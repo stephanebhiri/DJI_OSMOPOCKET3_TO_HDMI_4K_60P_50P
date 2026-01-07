@@ -1,0 +1,14 @@
+[Unit]
+Description=HDMI Mode Selection - Dual Button Daemon
+After=multi-user.target
+Documentation=https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/bin/python3 /usr/local/bin/hdmi-mode-buttons-daemon.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

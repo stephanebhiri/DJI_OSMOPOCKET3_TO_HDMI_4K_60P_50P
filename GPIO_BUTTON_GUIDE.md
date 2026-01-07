@@ -1,11 +1,67 @@
-# GPIO Button - HDMI Mode Toggle (1080i50 ↔ 1080p50)
+# GPIO Buttons - HDMI Mode Selection (1080i50 / 1080p50)
 
-## 🎯 Fonctionnalité
+## 🎯 Deux Options Disponibles
 
-Basculer entre les modes HDMI avec un bouton physique:
+### Option 1: Dual Button (RECOMMANDÉE) ✅
+
+Deux boutons physiques pour sélectionner directement le mode:
+- **Bouton 1 (Pin 7)**: Force **1080i50** (entrelacé) + reboot
+- **Bouton 2 (Pin 11)**: Force **1080p50** (progressif) + reboot
+- Pas d'ambiguïté - vous savez exactement quel mode vous obtenez
+
+### Option 2: Single Button Toggle
+
+Un seul bouton qui bascule entre les modes:
 - **1080i50** (entrelacé) ↔ **1080p50** (progressif)
 - Appui sur bouton → Change le mode → Redémarre automatiquement
-- Service systemd qui écoute le bouton en arrière-plan
+
+**Ce guide couvre les deux options.**
+
+---
+
+## 🔌 Option 1: Dual Button Setup (Recommandée)
+
+### Câblage Matériel
+
+```
+Orange Pi 5 Plus (40-pin header)
+┌─────────────────┐
+│  1  3.3V        │
+│  3  ...         │
+│  5  ...         │
+│  7  GPIO3_A4 ●──┼─── Button 1 (1080i50) ───┐
+│  9  GND      ●──┼────────────────────────────┼── GND
+│ 11  GPIO3_A5 ●──┼─── Button 2 (1080p50) ───┘
+│ 13  ...         │
+└─────────────────┘
+```
+
+**Configuration:**
+- **Button 1**: Pin 7 (GPIO3_A4 / GPIO 100) → 1080i50 (interlacé)
+- **Button 2**: Pin 11 (GPIO3_A5 / GPIO 101) → 1080p50 (progressif)
+- **GND commun**: Pin 9 ou Pin 14
+
+### Installation
+
+```bash
+# Sur l'Orange Pi
+cd DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P
+chmod +x install-hdmi-buttons.sh
+./install-hdmi-buttons.sh
+```
+
+### Utilisation
+
+1. **Appuyer sur Button 1 (Pin 7)** → Passe en 1080i50 + reboot
+2. **Appuyer sur Button 2 (Pin 11)** → Passe en 1080p50 + reboot
+
+**Simple et sans ambiguïté!**
+
+---
+
+## 🔌 Option 2: Single Button Toggle
+
+### Câblage Matériel
 
 ---
 
