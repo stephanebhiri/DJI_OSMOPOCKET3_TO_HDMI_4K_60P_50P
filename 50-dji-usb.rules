@@ -1,0 +1,4 @@
+# USB permissions for DJI Osmo Pocket 3
+# Allows non-root access to DJI camera via libuvch264src
+SUBSYSTEM=="usb", ATTRS{idVendor}=="2ca3", ATTRS{idProduct}=="0023", MODE="0666", GROUP="video"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="2ca3", ATTRS{idProduct}=="0020", MODE="0666", GROUP="video"
