@@ -8,9 +8,11 @@ Hardware-accelerated H264 streaming from DJI Osmo Pocket 3 to HDMI with Rockchip
 
 ## 🎥 Demo Video
 
-https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P/raw/main/demo/OSM0_ORANGEPI_TO_HDMI1080i50.mp4
+![DJI Osmo Pocket 3 streaming demo](demo/demo-preview.gif)
 
 *Live streaming from DJI Osmo Pocket 3 to HDMI display via Orange Pi 5 Plus*
+
+📹 [Watch full quality video (MP4, 18 MB)](https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P/raw/main/demo/OSM0_ORANGEPI_TO_HDMI1080i50.mp4)
 
 **✅ Tested & Working (2026-01-08)**
 - Orange Pi 5 Plus (RK3588)
