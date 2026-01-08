@@ -73,14 +73,20 @@ sudo dd if=dji-noble-v1.0-20260108.img of=/dev/rdiskX bs=4m status=progress
 2. Connect HDMI display
 3. Power on
 4. Wait 60 seconds (auto-expand + first boot setup)
-5. Login: `orangepi` / `orangepi`
 
-### 4. Setup SSH (Optional)
+**Default credentials:**
+- User: `orangepi` / `orangepi`
+- Root password: `orangepi`
+- SSH: ✅ Enabled (password authentication)
+
+### 4. Connect via SSH (Optional)
 
 ```bash
-# From your computer
-ssh-copy-id orangepi@<IP>
+# Connect with password (orangepi)
 ssh orangepi@<IP>
+
+# Optional: Add your SSH key for passwordless login
+ssh-copy-id orangepi@<IP>
 ```
 
 ### 5. Use!
@@ -120,19 +126,23 @@ lsusb | grep -i dji
 sudo systemctl restart dji-h264-stream.service
 ```
 
-### SSH doesn't work
+### Can't connect via SSH
 
-**Normal!** Image has no SSH keys for security.
+SSH is enabled by default. If you can't connect:
 
 ```bash
-# Add your SSH key
-ssh-copy-id orangepi@<IP>
-```
+# 1. Check Orange Pi IP address (from HDMI console)
+ip addr show
 
-Or set password:
-```bash
-# Login via keyboard/HDMI
-passwd
+# 2. Try connecting with default password
+ssh orangepi@<IP>
+# Password: orangepi
+
+# 3. If password login disabled, add your SSH key (from HDMI console)
+mkdir -p ~/.ssh
+nano ~/.ssh/authorized_keys
+# Paste your public key, save and exit
+chmod 600 ~/.ssh/authorized_keys
 ```
 
 ### Service keeps restarting

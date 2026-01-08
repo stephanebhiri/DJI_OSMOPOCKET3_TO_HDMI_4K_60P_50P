@@ -43,6 +43,11 @@ Hardware-accelerated H264 streaming from DJI Osmo Pocket 3 to HDMI with Rockchip
    - Power on (wait 1 minute for first boot)
    - Plug DJI → Video works! 🎉
 
+**Default credentials:**
+- User: `orangepi` / `orangepi`
+- Root password: `orangepi`
+- SSH: ✅ Enabled
+
 **Image includes:** Everything pre-configured (OS, drivers, service, boot config)
 
 📖 **Full instructions:** [IMAGE_README.md](IMAGE_README.md)
