@@ -226,6 +226,8 @@ sudo udevadm trigger
 
 ## 🎛️ Optional: GPIO Button for HDMI Mode Toggle
 
+**⚠️ Not included in the ready-to-use image** - Install separately if needed
+
 Toggle between 1080i50 (interlaced) and 1080p50 (progressive) with a physical button.
 
 ```bash
