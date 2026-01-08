@@ -1,35 +1,35 @@
-# Configuration Validée - Ubuntu Noble 24.04
+# Validated Configuration - Ubuntu Noble 24.04
 
-✅ **Testé et fonctionnel le 8 janvier 2026**
+✅ **Tested and working on January 8, 2026**
 
 ## ⚠️ Important: Noble vs Trixie
 
-**✅ UTILISER: Ubuntu Noble 24.04 (ou Armbian Bookworm)**
+**✅ USE: Ubuntu Noble 24.04 (or Armbian Bookworm)**
 - GStreamer 1.24.2
-- Compatible avec libuvch264src (BELABOX fork)
+- Compatible with libuvch264src (BELABOX fork)
 
-**❌ NE PAS UTILISER: Debian Trixie**
+**❌ DO NOT USE: Debian Trixie**
 - GStreamer 1.26
-- **INCOMPATIBLE** avec libuvch264src (BELABOX fork)
-- Erreur: "Unable to get stream control: Invalid mode"
+- **INCOMPATIBLE** with libuvch264src (BELABOX fork)
+- Error: "Unable to get stream control: Invalid mode"
 
-## Système Validé
+## Validated System
 
 - **OS**: Armbian 25.11.1 Noble (Ubuntu 24.04)
 - **Kernel**: 6.1.115-vendor-rk35xx
 - **GStreamer**: 1.24.2
 - **Hardware**: Orange Pi 5 Plus (RK3588)
 
-## Configuration DJI
+## DJI Configuration
 
-Le DJI Osmo Pocket 3 s'adapte automatiquement à la demande du receiver.
+The DJI Osmo Pocket 3 automatically adapts to the receiver's request.
 
-**Configuration validée:**
-- **Résolution**: 4K (3840x2160)
+**Validated configuration:**
+- **Resolution**: 4K (3840x2160)
 - **Framerate**: 50 fps
 - **Format**: H.264
 
-## Configuration HDMI
+## HDMI Configuration
 
 **Boot parameters** (`/boot/armbianEnv.txt`):
 ```
@@ -37,12 +37,12 @@ extraargs=usbcore.quirks=2ca3:0023:i video=HDMI-A-1:1920x1080i@50 cma=256M
 ```
 
 **KMS sink parameters:**
-- `plane-id=73` (supporte NV12 pour MPP)
+- `plane-id=73` (supports NV12 for MPP)
 - `connector-id=215` (HDMI-A-1)
 
-⚠️ **Note**: `plane-id=72` ne marche PAS (erreur "Invalid argument")
+⚠️ **Note**: `plane-id=72` does NOT work (error "Invalid argument")
 
-## Pipeline GStreamer Validé
+## Validated GStreamer Pipeline
 
 ```bash
 gst-launch-1.0 \
@@ -51,176 +51,176 @@ gst-launch-1.0 \
     kmssink plane-id=73 connector-id=215 sync=false
 ```
 
-## Performances
+## Performance
 
-- **CPU**: ~43% (décodage hardware MPP)
+- **CPU**: ~43% (MPP hardware decode)
 - **RAM**: ~92 MB (stable)
-- **Latence**: Faible (~50-100ms)
+- **Latency**: Low (~50-100ms)
 
-## Fichiers Modifiés
+## Modified Files
 
-### 1. `/etc/udev/rules.d/50-dji-usb.rules` (NOUVEAU)
+### 1. `/etc/udev/rules.d/50-dji-usb.rules` (NEW)
 
 ```
 SUBSYSTEM=="usb", ATTRS{idVendor}=="2ca3", ATTRS{idProduct}=="0023", MODE="0666", GROUP="video"
 ```
 
-**Sans ce fichier**: Erreur "Access denied" au démarrage
+**Without this file**: "Access denied" error on startup
 
 ### 2. `dji-stream.sh`
 
-**Changements critiques:**
+**Critical changes:**
 - `plane-id=72` → `plane-id=73` ✅
-- Audio temporairement désactivé (pour stabilité)
+- Audio temporarily disabled (for stability)
 
 ### 3. `/boot/armbianEnv.txt`
 
-**Ajout USB quirk:**
+**Added USB quirk:**
 ```
 usbcore.quirks=2ca3:0023:i
 ```
 
-## Installation sur Fresh Noble
+## Installation on Fresh Noble
 
-1. **Flasher Ubuntu Noble 24.04 Minimal/IOT** (kernel 6.1 vendor)
+1. **Flash Ubuntu Noble 24.04 Minimal/IOT** (kernel 6.1 vendor)
 
-2. **Configurer SSH avant boot** (optionnel):
+2. **Configure SSH before boot** (optional):
 ```bash
-# Monter la partition root
+# Mount root partition
 mkdir -p /tmp/armbi_root
 mount /dev/sdX1 /tmp/armbi_root
 
-# Ajouter clé SSH
+# Add SSH key
 mkdir -p /tmp/armbi_root/root/.ssh
 cat ~/.ssh/id_rsa.pub > /tmp/armbi_root/root/.ssh/authorized_keys
 chmod 700 /tmp/armbi_root/root/.ssh
 chmod 600 /tmp/armbi_root/root/.ssh/authorized_keys
 
-# Activer SSH
+# Enable SSH
 touch /tmp/armbi_root/boot/ssh
 
-# Démonter
+# Unmount
 umount /tmp/armbi_root
 ```
 
-3. **Booter et se connecter**:
+3. **Boot and connect**:
 ```bash
-# Login par défaut: orangepi / orangepi
+# Default login: orangepi / orangepi
 ssh orangepi@<IP>
 ```
 
-4. **Cloner le repo**:
+4. **Clone the repo**:
 ```bash
 git clone https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P.git
 cd DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P
 ```
 
-5. **Installer**:
+5. **Install**:
 ```bash
-sudo ./install.sh
+sudo ./install-noble.sh
 ```
 
-6. **Installer les permissions USB**:
+6. **Install USB permissions**:
 ```bash
 sudo cp 50-dji-usb.rules /etc/udev/rules.d/
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 ```
 
-7. **Configurer HDMI et USB quirk**:
+7. **Configure HDMI and USB quirk**:
 ```bash
 sudo sed -i 's|extraargs=cma=256M|extraargs=usbcore.quirks=2ca3:0023:i video=HDMI-A-1:1920x1080i@50 cma=256M|' /boot/armbianEnv.txt
 ```
 
-8. **Installer le script corrigé**:
+8. **Install the corrected script**:
 ```bash
 sudo cp dji-stream.sh /usr/local/bin/
 sudo chmod +x /usr/local/bin/dji-stream.sh
 ```
 
-9. **Activer le service**:
+9. **Enable the service**:
 ```bash
 sudo cp dji-h264-stream.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable dji-h264-stream.service
 ```
 
-10. **Rebooter**:
+10. **Reboot**:
 ```bash
 sudo reboot
 ```
 
-11. **Brancher le DJI et vérifier**:
+11. **Plug in the DJI and verify**:
 ```bash
 sudo systemctl status dji-h264-stream.service
 ```
 
-## Dépannage
+## Troubleshooting
 
-### Erreur "Access denied"
+### "Access denied" error
 ```bash
-# Vérifier permissions USB
+# Check USB permissions
 ls -la /dev/bus/usb/001/*
 
-# Recharger udev
+# Reload udev
 sudo udevadm control --reload-rules
 sudo udevadm trigger
 
-# Rebrancher le DJI
+# Replug the DJI
 ```
 
-### Erreur "Invalid argument" (kmssink)
+### "Invalid argument" error (kmssink)
 ```bash
-# Vérifier plane-id dans dji-stream.sh
+# Check plane-id in dji-stream.sh
 cat /usr/local/bin/dji-stream.sh | grep plane-id
 
-# Doit être: plane-id=73 (pas 72!)
+# Should be: plane-id=73 (not 72!)
 ```
 
-### Pas de vidéo
+### No video
 ```bash
-# Vérifier que le service tourne
+# Check that the service is running
 sudo systemctl status dji-h264-stream.service
 
-# Voir les logs
+# View logs
 sudo journalctl -u dji-h264-stream.service -f
 
-# Tester manuellement
+# Test manually
 sudo systemctl stop dji-h264-stream.service
 gst-launch-1.0 videotestsrc ! kmssink plane-id=73 connector-id=215
 ```
 
-### OOM killer (mémoire)
-Si le service est tué après quelques minutes, c'est normal - le service redémarre automatiquement (comportement observé mais stable après redémarrage).
+### OOM killer (memory)
+If the service is killed after a few minutes, this is normal - the service automatically restarts (observed behavior but stable after restart).
 
-## Commandes Utiles
+## Useful Commands
 
 ```bash
-# Statut du service
+# Service status
 sudo systemctl status dji-h264-stream.service
 
-# Redémarrer
+# Restart
 sudo systemctl restart dji-h264-stream.service
 
-# Arrêter/Démarrer
+# Stop/Start
 sudo systemctl stop dji-h264-stream.service
 sudo systemctl start dji-h264-stream.service
 
-# Logs en direct
+# Live logs
 sudo journalctl -u dji-h264-stream.service -f
 
-# Vérifier DJI connecté
+# Check DJI connected
 lsusb | grep -i dji
 
-# Vérifier décodage
+# Check decoding
 dmesg | grep -i "uvc\|dji"
 ```
 
-## Différences avec Bookworm
+## Differences from Bookworm
 
-Cette configuration est identique à Bookworm car Noble et Bookworm partagent **GStreamer 1.24**.
+This configuration is identical to Bookworm because Noble and Bookworm both share **GStreamer 1.24**.
 
-**Pourquoi ça marche:**
-- BELABOX fork (jan 2025) développé pour GStreamer 1.24
+**Why it works:**
+- BELABOX fork (Jan 2025) developed for GStreamer 1.24
 - Noble = GStreamer 1.24 ✅
-- Trixie = GStreamer 1.26 ❌ (changements d'API incompatibles)
+- Trixie = GStreamer 1.26 ❌ (incompatible API changes)
