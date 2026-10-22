@@ -1,0 +1,15 @@
+[Unit]
+Description=Install DJI system from SD to NVMe and SPI on first boot
+After=local-fs.target armbian-firstrun.service
+Before=dji-h264-stream.service
+ConditionPathExists=/usr/local/sbin/dji-install-to-nvme.sh
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/dji-install-to-nvme.sh
+StandardOutput=journal+console
+StandardError=journal+console
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target

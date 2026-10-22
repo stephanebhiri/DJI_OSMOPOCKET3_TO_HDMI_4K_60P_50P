@@ -1,0 +1,11 @@
+--- a/include/libuvc/libuvc.h
++++ b/include/libuvc/libuvc.h
+@@ -86,6 +86,8 @@ enum uvc_frame_format {
+   UVC_FRAME_FORMAT_NV12,
+   /** YUV: P010 */
+   UVC_FRAME_FORMAT_P010,
++  /** Compatibility with BELABOX's H265-capable GStreamer source. */
++  UVC_FRAME_FORMAT_H265,
+   /** Number of formats understood */
+   UVC_FRAME_FORMAT_COUNT,
+ };

@@ -1,0 +1,10 @@
+Build date: 2026-10-22
+Target board: Orange Pi 5 Plus (RK3588)
+Base: Armbian 25.8.1 Ubuntu Noble minimal vendor 6.1.115
+Base compressed SHA256: 8fc641e84f10d2a64ec0539da82c93c64059cdb672c2e06dacbd7e9527920478
+DJI project: ad95e289eb0b2be49b340009b103a0a6c2dbbdac
+Rockchip MPP (gitee.com/hermanchen82/mpp): 20959ec3dabb313b8c33ca0b7b09c06ffd2a9caa
+gstreamer-rockchip (github.com/Caesar-github/gstreamer-rockchip): 4cd4edf2fce63533982b9a0e2b0ef6be3598693d
+BELABOX gstlibuvch264src (github.com/BELABOX/gstlibuvch264src): 1644b6d1876ffb4e0da60f1410db9f4d54c80307
+Local compatibility patch: image/patches/belabox-h265-enum.patch (adds the missing H265 enum after existing formats; DJI H264 path is unchanged)
+OS packages: Ubuntu Noble security/updates and Armbian stable repository as of 2026-10-22
