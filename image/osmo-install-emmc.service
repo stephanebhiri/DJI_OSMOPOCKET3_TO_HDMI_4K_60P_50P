@@ -1,0 +1,15 @@
+[Unit]
+Description=Install OSMO2HDMI from microSD to eMMC once
+After=local-fs.target
+Before=multi-user.target
+ConditionPathExists=/usr/local/sbin/osmo-install-emmc.sh
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/osmo-install-emmc.sh
+StandardOutput=journal+console
+StandardError=journal+console
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target

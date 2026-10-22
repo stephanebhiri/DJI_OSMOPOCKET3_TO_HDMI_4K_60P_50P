@@ -23,14 +23,29 @@ Hardware-accelerated H264 streaming from DJI Osmo Pocket 3 to HDMI with Rockchip
 
 ---
 
+## Images Orange Pi 5 Plus, version du 22 octobre 2026
+
+Deux images Armbian Noble avec les sources et les réglages vidéo actualisés sont disponibles dans [la version GitHub v2.0-orangepi5plus](https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P/releases/tag/v2.0-orangepi5plus) :
+
+- **microSD boot** : démarre et lance directement la Pocket 3 sur la microSD.
+- **microSD eMMC installer** : démarre sur la microSD, efface et installe le système sur l'eMMC, puis éteint la carte. Retirer ensuite la microSD et rallumer.
+
+La sortie a été réglée et validée sur HDMI-A-2 en 1080i50 avec l'Orange Pi 5 Plus et un écran compatible. La caméra émet en 4K50. Une autre prise HDMI ou un autre écran peut nécessiter d'adapter le numéro de connecteur, de plan et de mode EDID.
+
+**Attention :** l'image installateur efface entièrement l'eMMC détectée. Une carte qui possède déjà un chargeur de démarrage sur eMMC peut démarrer sur eMMC malgré la présence de la microSD ; il faut alors faire démarrer la microSD en priorité avant d'utiliser l'une ou l'autre image. Voir [les instructions détaillées](image/DUAL_IMAGES.md). Les deux images occupent environ 6 Go une fois décompressées : utiliser une microSD d'au moins 8 Go.
+
+---
+
 ## 🎯 Two Ways to Use This Project
 
-### Option 1: 🖼️ **Ready-to-Use Image** (Recommended - Fastest!)
+### Option 1: 🖼️ **Ancienne image v1.0 (archive)**
+
+Cette section décrit la version de janvier 2026. Pour une nouvelle installation, choisir l’une des deux images v2.0 ci-dessus.
 
 **⏱️ 5 minutes setup** - Just flash and go!
 
 1. **Download pre-built image** (893 MB):
-   - [📥 Download from GitHub Releases](https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P/releases/latest)
+   - [📥 Download from GitHub Releases (v1.0)](https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P/releases/tag/v1.0-noble)
    - File: `dji-noble-v1.0-20260108.img.gz`
 
 2. **Flash with Etcher**:

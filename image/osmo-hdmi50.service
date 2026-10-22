@@ -1,0 +1,15 @@
+[Unit]
+Description=Keep HDMI-A-2 at 1080i50 for the DJI stream
+After=systemd-udev-settle.service
+Wants=systemd-udev-settle.service
+Before=dji-h264-stream.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/osmo-hdmi50.sh
+ExecStartPost=/bin/bash -c 'for attempt in {1..50}; do grep -q "Display mode: 1920x1080i50" /sys/kernel/debug/dri/0/summary && exit 0; sleep 0.1; done; exit 1'
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
