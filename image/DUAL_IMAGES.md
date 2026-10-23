@@ -2,6 +2,8 @@
 
 Version `v2.0-orangepi5plus`, construite le 22 octobre 2026 avec les révisions de [`source-lock.txt`](source-lock.txt).
 
+**État au 23 octobre 2026 :** ces images ne contiennent pas encore le service audio HDMI. Elles sélectionnent aussi le 1080i50 par le numéro EDID fixe `#13` ; ce numéro a changé après un redémarrage sur le matériel utilisé pour les essais et la vidéo n'est pas revenue. Une correction a été validée sur l'eMMC de cette machine, mais elle n'est pas incluse dans les téléchargements ci-dessous. Ne pas considérer ces fichiers comme prêts pour une production nécessitant vidéo et son.
+
 | Fichier | Usage | Résultat |
 | --- | --- | --- |
 | `OSMO2HDMI-OrangePi5Plus-microSD-boot-2026-10-22.img.gz` | Utilisation sur microSD | Démarre et lance automatiquement la Pocket 3 vers HDMI-A-2 en 1080i50. |

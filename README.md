@@ -27,6 +27,8 @@ Hardware-accelerated H264 streaming from DJI Osmo Pocket 3 to HDMI with Rockchip
 
 Deux images Armbian Noble avec les sources et les réglages vidéo actualisés sont disponibles dans [la version GitHub v2.0-orangepi5plus](https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P/releases/tag/v2.0-orangepi5plus) :
 
+**État de cette version (23 octobre 2026) :** ces deux téléchargements n'incluent pas encore le son de la Pocket 3 et utilisent un numéro de mode EDID fixe. Un écran qui renumérote ses modes peut empêcher le retour de l'image après redémarrage. Ne pas utiliser ces images pour une production avec son avant la publication et la validation de nouvelles images.
+
 - **microSD boot** : démarre et lance directement la Pocket 3 sur la microSD.
 - **microSD eMMC installer** : démarre sur la microSD, efface et installe le système sur l'eMMC, puis éteint la carte. Retirer ensuite la microSD et rallumer.
 

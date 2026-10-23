@@ -83,6 +83,9 @@ install_emmc() {
     unlink "$mountpoint/etc/systemd/system/multi-user.target.wants/osmo-install-emmc.service"
     ln -s ../dji-h264-stream.service "$mountpoint/etc/systemd/system/multi-user.target.wants/dji-h264-stream.service"
     ln -s ../osmo-hdmi50.service "$mountpoint/etc/systemd/system/multi-user.target.wants/osmo-hdmi50.service"
+    if [[ -f $mountpoint/etc/systemd/system/dji-hdmi-audio.service ]]; then
+        ln -s ../dji-hdmi-audio.service "$mountpoint/etc/systemd/system/multi-user.target.wants/dji-hdmi-audio.service"
+    fi
     printf 'complete %s\n' "$(date -u +%FT%TZ)" > "$mountpoint/var/lib/osmo-emmc-install/state"
     sync
     umount "$mountpoint"
