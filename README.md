@@ -1,6 +1,6 @@
 # DJI Osmo Pocket 3 → HDMI 4K Streaming
 
-![Status](https://img.shields.io/badge/status-production%20ready-brightgreen)
+![Status](https://img.shields.io/badge/images-withdrawn-orange)
 ![Platform](https://img.shields.io/badge/platform-OrangePi%205%20Plus%20%7C%20RK3588-orange)
 ![OS](https://img.shields.io/badge/OS-Ubuntu%20Noble%2024.04-blue)
 
@@ -23,18 +23,11 @@ Hardware-accelerated H264 streaming from DJI Osmo Pocket 3 to HDMI with Rockchip
 
 ---
 
-## Images Orange Pi 5 Plus, version du 22 octobre 2026
+## Images Orange Pi 5 Plus
 
-Deux images Armbian Noble avec les sources et les réglages vidéo actualisés sont disponibles dans [la version GitHub v2.0-orangepi5plus](https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P/releases/tag/v2.0-orangepi5plus) :
+**Images retirées le 24 octobre 2026.** Les anciennes images v1.0 et v2.0 ne sont plus téléchargeables. Les images v2.0 ne contenaient pas le son de la Pocket 3 et utilisaient un numéro de mode EDID fixe qui a empêché le retour de la vidéo après redémarrage sur le matériel de test. Les sources corrigées sont sur `main`, mais aucune nouvelle image flashable n'a encore été construite et validée.
 
-**État de cette version (23 octobre 2026) :** ces deux téléchargements n'incluent pas encore le son de la Pocket 3 et utilisent un numéro de mode EDID fixe. Un écran qui renumérote ses modes peut empêcher le retour de l'image après redémarrage. Ne pas utiliser ces images pour une production avec son avant la publication et la validation de nouvelles images.
-
-- **microSD boot** : démarre et lance directement la Pocket 3 sur la microSD.
-- **microSD eMMC installer** : démarre sur la microSD, efface et installe le système sur l'eMMC, puis éteint la carte. Retirer ensuite la microSD et rallumer.
-
-La sortie a été réglée et validée sur HDMI-A-2 en 1080i50 avec l'Orange Pi 5 Plus et un écran compatible. La caméra émet en 4K50. Une autre prise HDMI ou un autre écran peut nécessiter d'adapter le numéro de connecteur, de plan et de mode EDID.
-
-**Attention :** l'image installateur efface entièrement l'eMMC détectée. Une carte qui possède déjà un chargeur de démarrage sur eMMC peut démarrer sur eMMC malgré la présence de la microSD ; il faut alors faire démarrer la microSD en priorité avant d'utiliser l'une ou l'autre image. Voir [les instructions détaillées](image/DUAL_IMAGES.md). Les deux images occupent environ 6 Go une fois décompressées : utiliser une microSD d'au moins 8 Go.
+Les anciennes variantes étaient une image de démarrage microSD et une image d'installation eMMC. Cette dernière effaçait entièrement l'eMMC. Leur fonctionnement et leurs limites restent documentés dans [les instructions historiques](image/DUAL_IMAGES.md).
 
 ---
 
@@ -42,13 +35,11 @@ La sortie a été réglée et validée sur HDMI-A-2 en 1080i50 avec l'Orange Pi 
 
 ### Option 1: 🖼️ **Ancienne image v1.0 (archive)**
 
-Cette section décrit la version de janvier 2026. Pour une nouvelle installation, choisir l’une des deux images v2.0 ci-dessus.
+Cette section décrit la version de janvier 2026, retirée des téléchargements publics. Elle ne sert que de référence historique si vous possédez déjà le fichier.
 
 **⏱️ 5 minutes setup** - Just flash and go!
 
-1. **Download pre-built image** (893 MB):
-   - [📥 Download from GitHub Releases (v1.0)](https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P/releases/tag/v1.0-noble)
-   - File: `dji-noble-v1.0-20260108.img.gz`
+1. **Use an existing local copy** of `dji-noble-v1.0-20260108.img.gz` (893 MB). This image is no longer published.
 
 2. **Flash with Etcher**:
    - Download [Balena Etcher](https://etcher.balena.io/)

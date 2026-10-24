@@ -1,5 +1,7 @@
 # DJI Osmo Pocket 3 → HDMI Ready Image
 
+> **Historical documentation:** the v1.0 image was withdrawn from public downloads on October 24, 2026. The instructions below apply only if you already have a local copy. No corrected flashable image has been published yet.
+
 ## 📦 Image Info
 
 - **Filename**: `dji-noble-v1.0-20260108.img.gz`
@@ -33,11 +35,10 @@
 
 ## 🚀 Quick Start
 
-### 1. Download & Verify
+### 1. Verify an existing local copy
 
 ```bash
-# Download
-# dji-noble-v1.0-20260108.img.gz (893 MB)
+# Existing local file: dji-noble-v1.0-20260108.img.gz (893 MB)
 
 # Verify checksum
 shasum -a 256 -c dji-noble-v1.0-20260108.img.gz.sha256

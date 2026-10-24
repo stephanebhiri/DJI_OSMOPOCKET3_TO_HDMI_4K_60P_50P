@@ -1,15 +1,15 @@
-# Images prêtes à flasher — Orange Pi 5 Plus
+# Images retirées — Orange Pi 5 Plus
 
 Version `v2.0-orangepi5plus`, construite le 22 octobre 2026 avec les révisions de [`source-lock.txt`](source-lock.txt).
 
-**État au 23 octobre 2026 :** ces images ne contiennent pas encore le service audio HDMI. Elles sélectionnent aussi le 1080i50 par le numéro EDID fixe `#13` ; ce numéro a changé après un redémarrage sur le matériel utilisé pour les essais et la vidéo n'est pas revenue. Une correction a été validée sur l'eMMC de cette machine, mais elle n'est pas incluse dans les téléchargements ci-dessous. Ne pas considérer ces fichiers comme prêts pour une production nécessitant vidéo et son.
+**Retirées des téléchargements publics le 24 octobre 2026 :** ces images ne contiennent pas le service audio HDMI. Elles sélectionnent aussi le 1080i50 par le numéro EDID fixe `#13` ; ce numéro a changé après un redémarrage sur le matériel utilisé pour les essais et la vidéo n'est pas revenue. Une correction a été validée sur l'eMMC de cette machine, mais aucune image corrigée n'a encore été construite et validée.
 
 | Fichier | Usage | Résultat |
 | --- | --- | --- |
 | `OSMO2HDMI-OrangePi5Plus-microSD-boot-2026-10-22.img.gz` | Utilisation sur microSD | Démarre et lance automatiquement la Pocket 3 vers HDMI-A-2 en 1080i50. |
 | `OSMO2HDMI-OrangePi5Plus-microSD-emmc-installer-2026-10-22.img.gz` | Installation sur eMMC | **Efface toute l'eMMC**, copie le système, vérifie les données, agrandit la partition et éteint la carte. Retirer la microSD et rallumer pour utiliser le système installé. |
 
-Télécharger **un seul** fichier `.img.gz`, vérifier son SHA-256 avec le fichier `SHA256SUMS`, puis le flasher sur une microSD d'au moins 8 Go avec Etcher ou Raspberry Pi Imager. Une fois la carte insérée, brancher l'écran sur la sortie HDMI-A-2 et la Pocket 3 sur un port USB de données, puis mettre sous tension. L'image installateur peut prendre plusieurs minutes ; ne pas couper le courant avant l'extinction automatique.
+Ces noms de fichiers sont conservés pour référence historique. Aucun de ces fichiers n'est proposé au téléchargement.
 
 Les images sont conçues comme des appareils autonomes : aucun compte Linux à créer et aucun mot de passe préinstallé. Le compte root est verrouillé et SSH désactivé. En cas de besoin de maintenance, préparer une nouvelle image ou modifier celle-ci hors ligne.
 
