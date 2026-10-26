@@ -17,6 +17,10 @@ mkdir -p "$units" "$root/usr/share/doc/dji-osmo2hdmi"
 for name in dji-h264-stream osmo-hdmi50 dji-hdmi-audio dji-install-to-nvme ssh sshd armbian-resize-filesystem armbian-firstrun; do
     rm -f "$units/$name.service"
 done
+# Armbian installs its resize unit under basic.target, before the installer
+# starts. It must stay disabled on SD so the copied region remains 6 GiB.
+rm -f "$root/etc/systemd/system/basic.target.wants/armbian-resize-filesystem.service"
+ln -sfn /dev/null "$root/etc/systemd/system/armbian-resize-filesystem.service"
 rm -f "$root/etc/systemd/system/sockets.target.wants/ssh.socket"
 for name in ssh.service sshd.service ssh.socket; do
     ln -sfn /dev/null "$root/etc/systemd/system/$name"

@@ -4,7 +4,7 @@ set -euo pipefail
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 root=$tmp/root
-mkdir -p "$root"/{etc/systemd/system/multi-user.target.wants,etc/systemd/system/getty.target.wants,etc/systemd/system/getty@.service.d,etc/systemd/system/serial-getty@.service.d,etc/ssh,root/.ssh,var/log,usr/local/bin,usr/local/sbin,usr/share/doc/dji-osmo2hdmi,boot}
+mkdir -p "$root"/{etc/systemd/system/multi-user.target.wants,etc/systemd/system/basic.target.wants,etc/systemd/system/getty.target.wants,etc/systemd/system/getty@.service.d,etc/systemd/system/serial-getty@.service.d,etc/ssh,root/.ssh,var/log,usr/local/bin,usr/local/sbin,usr/share/doc/dji-osmo2hdmi,boot}
 printf 'VERSION_CODENAME=noble\n' >"$root/etc/os-release"
 printf '127.0.0.1 localhost\n' >"$root/etc/hosts"
 printf 'root:$6$personal-hash:1:0:99999:7:::\n' >"$root/etc/shadow"
@@ -14,6 +14,7 @@ printf '[Service]\nExecStart=\nExecStart=-/sbin/agetty --autologin root %%I $TER
 printf '[Service]\nExecStart=\nExecStart=-/sbin/agetty --autologin root %%I $TERM\n' >"$root/etc/systemd/system/serial-getty@.service.d/override.conf"
 ln -s /lib/systemd/system/getty@.service "$root/etc/systemd/system/getty.target.wants/getty@tty1.service"
 ln -s /lib/systemd/system/serial-getty@.service "$root/etc/systemd/system/getty.target.wants/serial-getty@ttyFIQ0.service"
+ln -s /usr/lib/systemd/system/armbian-resize-filesystem.service "$root/etc/systemd/system/basic.target.wants/armbian-resize-filesystem.service"
 printf 'oldhost\n' >"$root/etc/ssh/ssh_host_ed25519_key"
 printf 'old-id\n' >"$root/etc/machine-id"
 printf 'private log\n' >"$root/var/log/auth.log"
@@ -39,6 +40,8 @@ units=$root/etc/systemd/system/multi-user.target.wants
 [[ $(readlink "$root/etc/systemd/system/serial-getty@.service") == /dev/null ]] || { echo 'Serial login not disabled' >&2; exit 1; }
 [[ ! -e $root/etc/systemd/system/getty@.service.d/override.conf ]] || { echo 'Console autologin retained' >&2; exit 1; }
 [[ ! -e $root/etc/systemd/system/serial-getty@.service.d/override.conf ]] || { echo 'Serial autologin retained' >&2; exit 1; }
+[[ ! -L $root/etc/systemd/system/basic.target.wants/armbian-resize-filesystem.service ]] || { echo 'Armbian basic-target resize remains enabled' >&2; exit 1; }
+[[ $(readlink "$root/etc/systemd/system/armbian-resize-filesystem.service") == /dev/null ]] || { echo 'Armbian resize service not masked' >&2; exit 1; }
 [[ -s $root/usr/share/doc/dji-osmo2hdmi/installer-critical.sha256 ]] || { echo 'Critical-file manifest missing' >&2; exit 1; }
 (cd "$root" && sha256sum -c usr/share/doc/dji-osmo2hdmi/installer-critical.sha256 --quiet)
 bash "$(dirname "$0")/audit-public-rootfs.sh" "$root"

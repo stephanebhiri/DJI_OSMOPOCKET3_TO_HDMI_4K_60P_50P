@@ -12,6 +12,8 @@ for name in ssh.service sshd.service ssh.socket; do
 done
 [[ ! -s $root/etc/machine-id && ! -e $root/root/.ssh && ! -e $root/opt/dji-build ]] || { echo 'Private identity or build sources retained' >&2; exit 1; }
 [[ ! -e $root/var/lib/osmo-emmc-install/state ]] || { echo 'Installer state retained' >&2; exit 1; }
+[[ ! -L $root/etc/systemd/system/basic.target.wants/armbian-resize-filesystem.service ]] || { echo 'Armbian basic-target resize enabled' >&2; exit 1; }
+[[ $(readlink "$root/etc/systemd/system/armbian-resize-filesystem.service") == /dev/null ]] || { echo 'Armbian resize unit not masked' >&2; exit 1; }
 [[ ! -e $root/root/.not_logged_in_yet ]] || { echo 'Armbian first-login marker retained' >&2; exit 1; }
 [[ ! -e $root/etc/profile.d/armbian-check-first-login.sh ]] || { echo 'First-login hook retained' >&2; exit 1; }
 for name in getty@.service serial-getty@.service; do
