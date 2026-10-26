@@ -4,13 +4,13 @@ set -Eeuo pipefail
 
 base=${1:?verified Armbian .img.xz required}
 output=${2:?output .img required}
-project=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
+project=$(cd "$(dirname "$0")/.." && pwd)
 lock=$project/image/source-lock.txt
 [[ $(uname -s) == Linux && $(uname -m) == aarch64 && $EUID == 0 ]] || {
     echo 'Run as root on an ARM64 Linux build host' >&2; exit 1;
 }
 [[ -f $base && ! -e $output ]] || { echo 'Base missing or output already exists' >&2; exit 1; }
-[[ -z $(git -C "$project" status --porcelain) ]] || { echo 'Commit or discard source changes first' >&2; exit 1; }
+[[ -z $(git -c "safe.directory=$project" -C "$project" status --porcelain) ]] || { echo 'Commit or discard source changes first' >&2; exit 1; }
 expected=$(sed -n 's/^Base compressed SHA256: //p' "$lock")
 printf '%s  %s\n' "$expected" "$base" | sha256sum -c -
 for command in losetup parted partprobe e2fsck resize2fs xzcat git chroot sha256sum; do
@@ -66,7 +66,7 @@ cp -L /etc/resolv.conf "$root/etc/resolv.conf.build"
 rm -f "$root/etc/resolv.conf"
 mv "$root/etc/resolv.conf.build" "$root/etc/resolv.conf"
 mkdir -p "$root/opt/dji-build/project" "$root/usr/share/doc/dji-osmo2hdmi"
-git -C "$project" archive HEAD | tar -x -C "$root/opt/dji-build/project"
+git -c "safe.directory=$project" -C "$project" archive HEAD | tar -x -C "$root/opt/dji-build/project"
 git clone https://gitee.com/hermanchen82/mpp.git "$root/opt/dji-build/mpp"
 git -C "$root/opt/dji-build/mpp" checkout --detach "$mpp_rev"
 git clone https://github.com/Caesar-github/gstreamer-rockchip.git "$root/opt/dji-build/gstreamer-rockchip"
@@ -77,7 +77,7 @@ git -C "$root/opt/dji-build/gstlibuvch264src" submodule update --init --recursiv
 chroot "$root" apt-get update
 chroot "$root" /bin/bash /opt/dji-build/project/image/provision-rootfs.sh
 chroot "$root" apt-get clean
-printf 'Project build revision: %s\n' "$(git -C "$project" rev-parse HEAD)" >"$root/usr/share/doc/dji-osmo2hdmi/build-revision.txt"
+printf 'Project build revision: %s\n' "$(git -c "safe.directory=$project" -C "$project" rev-parse HEAD)" >"$root/usr/share/doc/dji-osmo2hdmi/build-revision.txt"
 chroot "$root" dpkg-query -W -f='${Package} ${Version}\n' >"$root/usr/share/doc/dji-osmo2hdmi/packages.txt"
 for path in run dev/pts dev sys proc; do mountpoint -q "$root/$path" && umount -lf "$root/$path"; done
 bash "$project/image/finalize-public-installer.sh" "$root" "$project"
