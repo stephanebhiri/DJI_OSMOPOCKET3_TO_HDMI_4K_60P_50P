@@ -25,7 +25,7 @@ Hardware-accelerated H264 streaming from DJI Osmo Pocket 3 to HDMI with Rockchip
 
 ## Images Orange Pi 5 Plus
 
-**Images retirées le 24 octobre 2026.** Les anciennes images v1.0 et v2.0 ne sont plus téléchargeables. Les images v2.0 ne contenaient pas le son de la Pocket 3 et utilisaient un numéro de mode EDID fixe qui a empêché le retour de la vidéo après redémarrage sur le matériel de test. Les sources corrigées sont sur `main`, mais aucune nouvelle image flashable n'a encore été construite et validée.
+**Images retirées le 24 octobre 2026.** Les anciennes images v1.0 et v2.0 ne sont plus téléchargeables. Les images v2.0 ne contenaient pas le son de la Pocket 3 et utilisaient un numéro de mode EDID fixe qui a empêché le retour de la vidéo après redémarrage sur le matériel de test. Une installation personnelle corrigée sur eMMC est documentée dans [la procédure BELABOX](image/BELABOX_EMMC_RUNBOOK_FR.md) et [son compte rendu matériel](image/BELABOX_VALIDATION_2026-10-26.md). Aucune nouvelle image publique n'est publiée.
 
 Les anciennes variantes étaient une image de démarrage microSD et une image d'installation eMMC. Cette dernière effaçait entièrement l'eMMC. Leur fonctionnement et leurs limites restent documentés dans [les instructions historiques](image/DUAL_IMAGES.md).
 

@@ -73,6 +73,9 @@ dji_provision() {
   if ! grep -q '^[[:space:]]*UVC_FRAME_FORMAT_H265,' "$uvc/libuvc/include/libuvc/libuvc.h"; then
     patch -d "$uvc/libuvc" -p1 <"$project/image/patches/belabox-h265-enum.patch"
   fi
+  if grep -q 'required->dwMaxPayloadTransferSize >= actual->dwMaxPayloadTransferSize' "$uvc/libuvc/src/stream.c"; then
+    patch -d "$uvc/libuvc" -p1 <"$project/image/patches/belabox-uvc-stale-payload.patch"
+  fi
   cmake -S "$uvc/libuvc" -B "$uvc/libuvc/build" -DCMAKE_INSTALL_PREFIX=/usr/local
   cmake --build "$uvc/libuvc/build" -j "$(nproc)"
   cmake --install "$uvc/libuvc/build"

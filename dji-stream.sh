@@ -8,7 +8,7 @@ read -r connector_id mode_index < <(/usr/bin/modetest -M rockchip -c | /usr/loca
     exit 1
 }
 
-exec /usr/bin/gst-launch-1.0 \
+exec /usr/bin/gst-launch-1.0 --no-fault \
     libuvch264src index=0 ! video/x-h264,width=3840,height=2160,framerate=50/1 ! \
     h264parse ! mppvideodec ! \
-    kmssink connector-id="$connector_id" sync=false
+    kmssink connector-id="$connector_id" plane-id=114 sync=true restore-crtc=false

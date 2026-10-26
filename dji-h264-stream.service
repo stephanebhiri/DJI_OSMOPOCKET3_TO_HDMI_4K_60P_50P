@@ -2,6 +2,7 @@
 Description=DJI Osmo Pocket 3 H264 4K 50fps Stream to HDMI with Audio
 After=network.target sound.target osmo-hdmi50.service
 Wants=osmo-hdmi50.service
+StartLimitIntervalSec=0
 
 [Service]
 Type=simple

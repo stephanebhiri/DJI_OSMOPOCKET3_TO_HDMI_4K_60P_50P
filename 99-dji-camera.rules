@@ -1,2 +1,3 @@
-# Restart DJI streaming service when camera is reconnected
-ACTION=="add", SUBSYSTEM=="video4linux", ATTRS{idVendor}=="2ca3", ATTRS{idProduct}=="0023", RUN+="/bin/systemctl restart dji-h264-stream.service"
+# Restart once when the Pocket 3 USB device reconnects. Video nodes are
+# reprobed by libuvc and would otherwise cause a restart loop.
+ACTION=="add", SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="2ca3", ATTR{idProduct}=="0023", RUN+="/bin/systemctl restart dji-h264-stream.service"

@@ -7,4 +7,5 @@ Rockchip MPP (gitee.com/hermanchen82/mpp): 20959ec3dabb313b8c33ca0b7b09c06ffd2a9
 gstreamer-rockchip (github.com/Caesar-github/gstreamer-rockchip): 4cd4edf2fce63533982b9a0e2b0ef6be3598693d
 BELABOX gstlibuvch264src (github.com/BELABOX/gstlibuvch264src): 1644b6d1876ffb4e0da60f1410db9f4d54c80307
 Local compatibility patch: image/patches/belabox-h265-enum.patch (adds the missing H265 enum after existing formats; DJI H264 path is unchanged)
+Local UVC fix: image/patches/belabox-uvc-stale-payload.patch (checks format, frame, and interval; Pocket 3 GET_MAX payload is stale after switching 1080p30 to 4K50)
 OS packages: Ubuntu Noble security/updates and Armbian stable repository as of 2026-10-22
