@@ -29,9 +29,8 @@ The earlier Orange Pi installation produced Pocket 3 picture and microphone audi
 - A complete power-off/power-on booted the original BELABOX eMMC instead of the microSD. An offline `e2fsck -fn` of the unmounted microSD then found a corrupted directory. The freshly installed libuvc binary's SHA-256 had also changed from its verified value. This microSD is unsuitable as an eMMC source.
 - The separate 31.9 GB USB card was mounted from the original eMMC system, updated with the same source patch and runtime files, and tested by running its Noble userspace in a chroot against the connected Pocket 3. Its 1080p30→4K50 UVC test passed. After clean unmount, an offline `e2fsck -fn` reported no errors. The patched libuvc SHA-256 is `c21c116ab853fd277139f89a6272267d927637c5f98a48c401f84ca6bf66b56d`.
 
-## Pending gates
+## Publication gate
 
-- Verify a full power-off/power-on from the new eMMC: healthy filesystem, HDMI 1080i50, moving Pocket 3 image and audible microphone sound without manual commands.
 - No corrected image should be published until the exact image file is rebuilt, checksummed, flashed, and independently cold tested.
 
 ## eMMC installation and first live test
@@ -48,4 +47,11 @@ The earlier Orange Pi installation produced Pocket 3 picture and microphone audi
 
 - With the Mac data cable and both removable cards removed, a full power-off/power-on booted `/dev/mmcblk0p1`. HDMI-A-2 remained at `1920x1080i50`, the Pocket 3 enumerated as `2ca3:0023`, and all three services reported active. The user confirmed moving picture and microphone sound on the display.
 - During this boot, the first `gst-launch-1.0` video process logged `Caught SIGSEGV` after entering PLAYING and then spun waiting for a debugger. It misleadingly appeared active while KMS plane 114 was empty. Restarting only `dji-h264-stream.service` produced an active NV12 plane and restored the stream. The exact internal crash cause was not established.
-- The source and installed `dji-stream.sh` now invoke `gst-launch-1.0 --no-fault`. This disables its debugger wait so `Restart=always` can recover from a future crash. In a controlled recovery test, sending SIGSEGV to video PID 1566 caused systemd to replace it with PID 1623; HDMI remained at 1080i50 and plane 114 again held a 3840×2160 NV12 framebuffer. A further full power-off/power-on with this final script remains to be checked.
+- The source and installed `dji-stream.sh` now invoke `gst-launch-1.0 --no-fault`. This disables its debugger wait so `Restart=always` can recover from a future crash. In a controlled recovery test, sending SIGSEGV to video PID 1566 caused systemd to replace it with PID 1623; HDMI remained at 1080i50 and plane 114 again held a 3840×2160 NV12 framebuffer.
+
+## Final cold boot with the installed fixes
+
+- After a complete power-off and power-on with no microSD, USB card reader or Mac data cable, the board booted from `/dev/mmcblk0p1`. The new boot ID was `774a7125-ae5e-4d02-b5b6-ec53641b0ff4`.
+- Pocket 3 `2ca3:0023`, all three services active, HDMI-A-2 `1920x1080i50`, and KMS plane 114 active with a 3840×2160 NV12 framebuffer. No ext4, MMC or I/O error appeared in the boot log.
+- Early service attempts failed while USB audio/video was still enumerating, then the first video pipeline reached PLAYING and exited with `status=11/SEGV`. With `--no-fault`, systemd automatically started a new process (PID 1408); the live picture returned without any manual service command. The user physically confirmed **moving image and microphone sound** on HDMI after this cold boot.
+- The recurring first-launch segmentation fault is **not root-cause fixed**. The installed restart behavior recovered during this test. Continue to treat a future lack of picture or unexpectedly repeated crashes as a fault and inspect `journalctl -b -u dji-h264-stream.service` and the KMS plane before claiming healthy operation.
