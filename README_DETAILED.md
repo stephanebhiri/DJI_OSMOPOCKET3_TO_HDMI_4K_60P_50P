@@ -1,5 +1,10 @@
 # DJI Osmo Pocket 3 - Hardware Accelerated 4K Streaming on Linux
 
+> **Guide historique.** Cette architecture et ses performances ne prouvent
+> pas le fonctionnement de l'installation eMMC actuelle. Voir le
+> [README actuel](README.md) et le
+> [compte rendu matériel](image/BELABOX_VALIDATION_2026-10-26.md).
+
 Hardware-accelerated H264 streaming from DJI Osmo Pocket 3 to HDMI with Rockchip MPP decoder on ARM64 Linux (OrangePi 5 Plus / RK3588).
 
 ## Features

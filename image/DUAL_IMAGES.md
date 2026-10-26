@@ -2,12 +2,12 @@
 
 Version `v2.0-orangepi5plus`, construite le 22 octobre 2026 avec les révisions de [`source-lock.txt`](source-lock.txt).
 
-**Retirées des téléchargements publics le 24 octobre 2026 :** ces images ne contiennent pas le service audio HDMI. Elles sélectionnent aussi le 1080i50 par le numéro EDID fixe `#13` ; ce numéro a changé après un redémarrage sur le matériel utilisé pour les essais et la vidéo n'est pas revenue. Une correction a été validée sur l'eMMC de cette machine, mais aucune image corrigée n'a encore été construite et validée.
+**Retirées des téléchargements publics le 24 octobre 2026 :** ces images ne contiennent pas le service audio HDMI. Elles sélectionnent aussi le 1080i50 par le numéro EDID fixe `#13` ; ce numéro a changé après un redémarrage sur le matériel utilisé pour les essais et la vidéo n'est pas revenue. Une installation personnelle corrigée a été testée sur l'eMMC d'une BELABOX ; son image contient une clé SSH de maintenance et n'est pas distribuée. **Aucune nouvelle image publique prête à flasher n'est disponible.** Voir le [README actuel](../README.md).
 
-| Fichier | Usage | Résultat |
+| Fichier retiré | Usage prévu | Limite |
 | --- | --- | --- |
-| `OSMO2HDMI-OrangePi5Plus-microSD-boot-2026-10-22.img.gz` | Utilisation sur microSD | Démarre et lance automatiquement la Pocket 3 vers HDMI-A-2 en 1080i50. |
-| `OSMO2HDMI-OrangePi5Plus-microSD-emmc-installer-2026-10-22.img.gz` | Installation sur eMMC | **Efface toute l'eMMC**, copie le système, vérifie les données, agrandit la partition et éteint la carte. Retirer la microSD et rallumer pour utiliser le système installé. |
+| `OSMO2HDMI-OrangePi5Plus-microSD-boot-2026-10-22.img.gz` | Utilisation sur microSD | Sans audio HDMI ; mode EDID figé ; démarrage autonome non validé de bout en bout. |
+| `OSMO2HDMI-OrangePi5Plus-microSD-emmc-installer-2026-10-22.img.gz` | Installation sur eMMC | **Efface toute l'eMMC** ; ancien contenu sans audio HDMI ; parcours complet non validé de bout en bout. |
 
 Ces noms de fichiers sont conservés pour référence historique. Aucun de ces fichiers n'est proposé au téléchargement.
 

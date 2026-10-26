@@ -1,5 +1,10 @@
 # Validated Configuration - Ubuntu Noble 24.04
 
+> **Configuration historique de janvier 2026.** Les identifiants de plan
+> HDMI et les étapes ci-dessous ne décrivent pas la BELABOX eMMC testée le
+> 26 octobre 2026. Voir le [README actuel](README.md) et la
+> [procédure BELABOX](image/BELABOX_EMMC_RUNBOOK_FR.md).
+
 ✅ **Tested and working on January 8, 2026**
 
 ## ⚠️ Important: Noble vs Trixie

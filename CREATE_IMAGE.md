@@ -1,5 +1,10 @@
 # Creating a Distribution Image
 
+> **Guide historique de fabrication.** Aucune image corrigée publique n'est
+> actuellement distribuée. La procédure eMMC testée et ses limites sont
+> décrites dans le [README actuel](README.md) et le
+> [compte rendu BELABOX](image/BELABOX_VALIDATION_2026-10-26.md).
+
 This guide explains how to create a clean, distributable SD card image from a working DJI Noble system.
 
 ## ⚠️ Important

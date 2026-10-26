@@ -1,5 +1,9 @@
 # GPIO Buttons - HDMI Mode Selection (1080i50 / 1080p50)
 
+> **Fonction optionnelle historique, non testée sur la BELABOX eMMC validée
+> le 26 octobre 2026.** La configuration actuelle fixe la sortie à 1080i50.
+> Voir le [README actuel](README.md).
+
 ## 🎯 Deux Options Disponibles
 
 ### Option 1: Dual Button (RECOMMANDÉE) ✅

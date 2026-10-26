@@ -1,6 +1,6 @@
 # DJI Osmo Pocket 3 → HDMI Ready Image
 
-> **Historical documentation:** the v1.0 image was withdrawn from public downloads on October 24, 2026. The instructions below apply only if you already have a local copy. No corrected flashable image has been published yet.
+> **Historical documentation:** the v1.0 image was withdrawn from public downloads on October 24, 2026. The instructions below apply only if you already have a local copy. No corrected public flashable image has been published. See the [current status](README.md).
 
 ## 📦 Image Info
 
@@ -236,4 +236,4 @@ https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P/issues
 
 **Image created**: 2026-01-08
 **Tested on**: Orange Pi 5 Plus, DJI Osmo Pocket 3
-**Status**: ✅ Production ready
+**Status**: Historical image withdrawn; not the validated BELABOX eMMC installation of October 2026.

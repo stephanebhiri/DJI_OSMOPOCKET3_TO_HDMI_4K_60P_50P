@@ -1,5 +1,10 @@
 # Installation Guide - DJI Osmo Pocket 3 → HDMI 4K 50fps
 
+> **Archive de janvier 2026 — ne pas suivre pour la BELABOX eMMC actuelle.**
+> Les identifiants HDMI, le noyau et le parcours d'installation ci-dessous
+> sont anciens. Lire d'abord le [README actuel](README.md) et la
+> [procédure eMMC validée](image/BELABOX_EMMC_RUNBOOK_FR.md).
+
 **Configuration Testée et Validée - 2026-01-07**
 
 ## ⚠️ IMPORTANT: Deux Options d'Installation

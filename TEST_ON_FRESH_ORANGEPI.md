@@ -1,5 +1,10 @@
 # Test sur Orange Pi Neuf - Procédure Complète
 
+> **Plan d'essai historique, non revalidé avec les corrections du 26 octobre
+> 2026.** Ne pas le traiter comme une procédure d'installation garantie.
+> Voir le [README actuel](README.md) et le
+> [compte rendu matériel](image/BELABOX_VALIDATION_2026-10-26.md).
+
 Ce document décrit la procédure exacte pour tester l'installation sur un Orange Pi 5 Plus tout neuf.
 
 ## Prérequis

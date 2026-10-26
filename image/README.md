@@ -1,5 +1,10 @@
 # Carte SD d'installation automatique vers NVMe — Orange Pi 5 Plus
 
+> **Installateur NVMe distinct, non validé de bout en bout avec les dernières
+> corrections BELABOX.** Ce guide ne décrit pas l'installation eMMC vérifiée
+> le 26 octobre 2026. Voir le [README principal](../README.md) et la
+> [procédure eMMC](BELABOX_EMMC_RUNBOOK_FR.md).
+
 Cette image démarre sur une Orange Pi 5 Plus, installe Armbian Ubuntu Noble et la chaîne DJI Pocket 3 → HDMI sur l'unique NVMe, programme U-Boot dans la mémoire SPI, puis éteint la carte. Après extinction, retirer la SD et rallumer l'Orange Pi pour démarrer depuis le NVMe.
 
 ## Contenu

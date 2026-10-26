@@ -1,5 +1,10 @@
 # Configuration Fonctionnelle DJI Osmo Pocket 3 → HDMI
 
+> **Archive de janvier 2026 — pas la configuration eMMC actuelle.** Les
+> identifiants DRM et le mode de sortie ci-dessous ne doivent pas être repris
+> tels quels. Voir le [README actuel](README.md) et la
+> [procédure BELABOX](image/BELABOX_EMMC_RUNBOOK_FR.md).
+
 **Date**: 2026-01-07
 **Statut**: ✅ PARFAIT - NE PAS MODIFIER
 
