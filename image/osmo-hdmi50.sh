@@ -22,7 +22,7 @@ for vtcon in /sys/class/vtconsole/vtcon*; do
 done
 
 # Connector IDs and EDID mode indices can change across boots and systems.
-read -r connector_id mode_index < <(/usr/bin/modetest -M rockchip -c | /usr/local/bin/parse-hdmi-mode.sh) || {
+read -r connector_id mode_index encoder_id < <(/usr/bin/modetest -M rockchip -c | /usr/local/bin/parse-hdmi-mode.sh) || {
     echo 'HDMI-A-2 does not offer 1080i50' >&2
     exit 1
 }
