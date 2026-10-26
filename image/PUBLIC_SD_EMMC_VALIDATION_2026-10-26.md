@@ -19,7 +19,7 @@
 | Étape | Résultat |
 | --- | --- |
 | microSD physique | Lecteur USB du Mac, `/dev/disk6`, 31,3 Go. Effacement explicitement confirmé par le propriétaire. |
-| Écriture et vérification de la microSD | En cours avec Raspberry Pi Imager. |
+| Écriture et vérification de la microSD | Raspberry Pi Imager 1.9.6 a annoncé « Écriture réussie », puis éjecté la carte. Les anciens réglages de personnalisation n'ont pas été appliqués. |
 | Démarrage réel sur microSD | À vérifier. |
 | Installation eMMC, comparaison et agrandissement | À vérifier. |
 | Démarrage à froid sans microSD | À vérifier. |
