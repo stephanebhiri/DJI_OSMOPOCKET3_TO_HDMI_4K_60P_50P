@@ -17,6 +17,13 @@
 La microSD du premier candidat a bien démarré : l'ancien SSH de l'eMMC ne
 répondait plus et l'écran a demandé « Create root password ». Cette demande
 contredit l'objectif de démarrage autonome. L'image ne doit pas être publiée.
+Après retrait de la microSD, l'ancien système eMMC a redémarré sur l'adresse
+DHCP `192.168.75.64` ; sa racine était `/dev/mmcblk0p1`. L'eMMC était donc
+intacte. L'écran montrait alors `osmo2hdmi login:` parce qu'il était branché
+sur HDMI-A-1, tandis que le service de cette installation attend HDMI-A-2.
+La connexion sur HDMI-A-2, près des ports Ethernet, a rendu l'image Pocket 3.
+Le propriétaire a aussi évoqué un moniteur informatique pendant l'essai : une
+incompatibilité de ce moniteur avec 1080i50 reste possible, mais non établie.
 La cause a été retracée dans Armbian : `/root/.not_logged_in_yet` active
 `/etc/profile.d/armbian-check-first-login.sh`, tandis que deux surcharges
 `getty` connectent automatiquement root sur la console. La désactivation du
