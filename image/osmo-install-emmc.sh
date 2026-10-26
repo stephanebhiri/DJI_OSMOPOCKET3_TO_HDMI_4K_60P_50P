@@ -3,62 +3,76 @@
 set -Eeuo pipefail
 
 SOURCE_BYTES=6442450944
-STATE_FILE=/var/lib/osmo-emmc-install/state
+STATE_FILE=${STATE_FILE:-/var/lib/osmo-emmc-install/state}
 
 die() { echo "Installation eMMC refusee: $*" >&2; exit 1; }
 
+dji_board_model() { tr -d '\000' </proc/device-tree/model; }
+dji_root_device() { findmnt -n -o SOURCE /; }
+dji_storage_type() { cat "/sys/block/${1##*/}/device/type"; }
+dji_device_size() { blockdev --getsize64 "$1"; }
+dji_partition_end() {
+    local name=${1##*/}
+    echo $(( ($(cat "/sys/class/block/$name/start") + $(cat "/sys/class/block/$name/size")) * 512 ))
+}
+dji_target_candidates() {
+    local path name
+    for path in /sys/block/mmcblk[0-9]*; do
+        name=${path##*/}
+        [[ $name =~ ^mmcblk[0-9]+$ ]] || continue
+        [[ $(dji_storage_type "/dev/$name") == MMC ]] && printf '/dev/%s\n' "$name"
+    done
+}
+dji_is_target_busy() {
+    lsblk -nrpo MOUNTPOINTS "$1" | grep -q '[^[:space:]]' ||
+        swapon --show=NAME --noheadings | grep -Fq "$1"
+}
+dji_hdmi_supported() {
+    modetest -M rockchip -c | /usr/local/bin/parse-hdmi-mode.sh >/dev/null
+}
+dji_source_files_valid() {
+    local manifest=/usr/share/doc/dji-osmo2hdmi/installer-critical.sha256
+    [[ -s $manifest ]] && (cd / && sha256sum -c "$manifest" --quiet)
+}
+
 preflight() {
-    local root source_disk source_name source_end target_name target_size
+    local root source_disk source_name source_end target target_size candidate
     local -a candidates=()
 
-    grep -aq 'Orange Pi 5 Plus' /proc/device-tree/model || die 'carte non reconnue'
-    root=$(findmnt -n -o SOURCE /)
+    [[ $(dji_board_model) == *'Orange Pi 5 Plus'* ]] || die 'carte non reconnue'
+    root=$(dji_root_device)
     [[ $root =~ ^/dev/mmcblk[0-9]+p[0-9]+$ ]] || die "racine non MMC: $root"
     source_disk=${root%p[0-9]*}
     source_name=${source_disk##*/}
-    [[ $(cat "/sys/block/$source_name/device/type") == SD ]] || die 'le systeme ne demarre pas sur microSD'
-    [[ $(cat "/sys/block/$source_name/queue/logical_block_size") == 512 ]] || die 'secteurs SD inattendus'
-    source_end=$(( ($(cat "/sys/class/block/${root##*/}/start") + $(cat "/sys/class/block/${root##*/}/size")) * 512 ))
+    [[ $(dji_storage_type "$source_disk") == SD ]] || die 'le systeme ne demarre pas sur microSD'
+    source_end=$(dji_partition_end "$root")
     (( source_end <= SOURCE_BYTES )) || die 'la partition SD a deja ete agrandie'
-    (( $(blockdev --getsize64 "$source_disk") >= SOURCE_BYTES )) || die 'carte SD trop petite'
+    (( $(dji_device_size "$source_disk") >= SOURCE_BYTES )) || die 'carte SD trop petite'
 
-    for path in /sys/block/mmcblk[0-9]*; do
-        target_name=${path##*/}
-        [[ $target_name =~ ^mmcblk[0-9]+$ ]] || continue
-        [[ $path != "/sys/block/$source_name" ]] || continue
-        [[ $(cat "$path/device/type") == MMC ]] && candidates+=("/dev/$target_name")
-    done
+    while IFS= read -r candidate; do
+        [[ -n $candidate && $candidate != "$source_disk" ]] && candidates+=("$candidate")
+    done < <(dji_target_candidates)
     (( ${#candidates[@]} == 1 )) || die "${#candidates[@]} eMMC detectee(s), exactement une requise"
     target=${candidates[0]}
-    target_size=$(blockdev --getsize64 "$target")
+    target_size=$(dji_device_size "$target")
     (( target_size >= SOURCE_BYTES + 1073741824 )) || die 'eMMC trop petite'
-    if lsblk -nrpo MOUNTPOINTS "$target" | grep -q '[^[:space:]]'; then
-        die 'eMMC deja montee'
-    fi
-    if swapon --show=NAME --noheadings | grep -Fq "$target"; then
-        die 'eMMC utilisee comme swap'
-    fi
+    dji_is_target_busy "$target" && die 'eMMC utilisee ou deja montee'
     [[ ! -e $STATE_FILE ]] || die 'une installation a deja ete tentee; reflasher la SD pour recommencer'
+    dji_hdmi_supported || die 'HDMI-A-2 1080i50 absent'
+    dji_source_files_valid || die 'fichiers source invalides'
     printf 'SOURCE=%s\nTARGET=%s\nBYTES=%s\n' "$source_disk" "$target" "$SOURCE_BYTES"
 }
 
 install_emmc() {
-    local source_disk target target_partition mountpoint path fsck_status
-    preflight
-    source_disk=$(findmnt -n -o SOURCE /)
-    source_disk=${source_disk%p[0-9]*}
-    target=''
-    for path in /sys/block/mmcblk[0-9]*; do
-        [[ ${path##*/} =~ ^mmcblk[0-9]+$ ]] || continue
-        [[ $path != "/sys/block/${source_disk##*/}" ]] || continue
-        if [[ $(cat "$path/device/type") == MMC ]]; then
-            target="/dev/${path##*/}"
-        fi
-    done
-    [[ -n $target ]] || die 'eMMC introuvable apres verification'
+    local source_disk target target_partition mountpoint fsck_status details
+    details=$(preflight)
+    source_disk=$(awk -F= '$1=="SOURCE" {print $2}' <<< "$details")
+    target=$(awk -F= '$1=="TARGET" {print $2}' <<< "$details")
+    [[ -b $source_disk && -b $target ]] || die 'source ou cible absente apres verification'
 
     mkdir -p "${STATE_FILE%/*}"
-    printf 'started %s %s\n' "$(date -u +%FT%TZ)" "$target" > "$STATE_FILE"
+    printf 'started %s source=%s target=%s bytes=%s\n' "$(date -u +%FT%TZ)" "$source_disk" "$target" "$SOURCE_BYTES" > "$STATE_FILE"
+    trap 'status=$?; if (( status != 0 )); then mount -o remount,rw / 2>/dev/null || true; printf "failed %s status=%s\n" "$(date -u +%FT%TZ)" "$status" >> "$STATE_FILE" 2>/dev/null || true; sync; echo "Installation eMMC interrompue; consulter $STATE_FILE et le journal systeme." >&2; fi' EXIT
     sync
     mount -o remount,ro / || die 'impossible de figer la carte SD en lecture seule'
     echo "Copie de $source_disk vers $target; ne pas couper l'alimentation."
@@ -90,6 +104,7 @@ install_emmc() {
     sync
     umount "$mountpoint"
     rmdir "$mountpoint"
+    trap - EXIT
     echo 'Installation terminee. Retirer la SD apres extinction, puis rallumer.'
     systemctl poweroff --no-block
 }
