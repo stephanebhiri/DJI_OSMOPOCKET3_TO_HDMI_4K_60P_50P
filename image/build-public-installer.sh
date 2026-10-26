@@ -83,7 +83,7 @@ for path in run dev/pts dev sys proc; do mountpoint -q "$root/$path" && umount -
 bash "$project/image/finalize-public-installer.sh" "$root" "$project"
 rm -f "$root/etc/resolv.conf"
 ln -s /run/systemd/resolve/stub-resolv.conf "$root/etc/resolv.conf"
-(cd "$root" && sha256sum -c usr/share/doc/dji-osmo2hdmi/installer-critical.sha256 --quiet)
+bash "$project/image/audit-public-rootfs.sh" "$root"
 sync
 umount "$root"
 rmdir "$root"

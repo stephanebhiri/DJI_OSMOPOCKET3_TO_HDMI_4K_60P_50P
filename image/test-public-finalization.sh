@@ -6,6 +6,7 @@ trap 'rm -rf "$tmp"' EXIT
 root=$tmp/root
 mkdir -p "$root"/{etc/systemd/system/multi-user.target.wants,etc/ssh,root/.ssh,var/log,usr/local/bin,usr/local/sbin,usr/share/doc/dji-osmo2hdmi,boot}
 printf 'VERSION_CODENAME=noble\n' >"$root/etc/os-release"
+printf '127.0.0.1 localhost\n' >"$root/etc/hosts"
 printf 'root:$6$personal-hash:1:0:99999:7:::\n' >"$root/etc/shadow"
 printf 'private\n' >"$root/root/.ssh/authorized_keys"
 printf 'oldhost\n' >"$root/etc/ssh/ssh_host_ed25519_key"
@@ -30,4 +31,5 @@ units=$root/etc/systemd/system/multi-user.target.wants
 [[ $(cut -d: -f2 "$root/etc/shadow") == '!' ]]
 [[ -s $root/usr/share/doc/dji-osmo2hdmi/installer-critical.sha256 ]]
 (cd "$root" && sha256sum -c usr/share/doc/dji-osmo2hdmi/installer-critical.sha256 --quiet)
+bash "$(dirname "$0")/audit-public-rootfs.sh" "$root"
 echo 'Public installer finalization: PASS'

@@ -30,11 +30,13 @@ if [[ -f $root/etc/shadow ]]; then
     mv "$root/etc/shadow.public" "$root/etc/shadow"
 fi
 rm -rf "$root/root/.ssh" "$root"/home/*/.ssh
+rm -f "$root/root/.bash_history" "$root/var/lib/systemd/random-seed"
 rm -f "$root"/etc/ssh/ssh_host_*
 rm -f "$root/etc/machine-id" "$root/var/lib/dbus/machine-id"
 : >"$root/etc/machine-id"
 rm -rf "$root"/var/log/* "$root"/var/cache/apt/archives/*.deb "$root"/var/lib/apt/lists/*
 rm -rf "$root/opt/dji-build"
+rm -rf "$root/var/lib/osmo-emmc-install"
 printf 'osmo2hdmi\n' >"$root/etc/hostname"
 printf '%s\n' \
     'Public Orange Pi 5 Plus microSD to eMMC installer' \
