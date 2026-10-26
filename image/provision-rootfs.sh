@@ -56,7 +56,8 @@ dji_provision() {
     libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
     libgstreamer-plugins-bad1.0-dev libdrm-dev libusb-1.0-0-dev \
     libudev-dev cmake meson ninja-build pkg-config git build-essential \
-    autoconf automake libtool autopoint gettext libdrm-tests python3
+    autoconf automake libtool autopoint gettext libdrm-tests python3 \
+    parted e2fsprogs util-linux
   [[ "$(gst-launch-1.0 --version)" == *'1.24.'* ]] || { echo 'GStreamer 1.24 required' >&2; return 1; }
 
   cmake -S "$mpp" -B "$mpp/build" -DRKPLATFORM=ON -DHAVE_DRM=ON
