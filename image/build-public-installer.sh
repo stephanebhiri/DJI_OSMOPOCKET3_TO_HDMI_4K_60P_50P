@@ -92,9 +92,9 @@ e2fsck -f -n "$partition" | tee "${output}.fsck.txt"
 losetup -d "$loop"
 loop=''
 sha256sum "$output" >"${output}.sha256"
-xz -T2 -k -6 "$output"
-sha256sum "${output}.xz" >"${output}.xz.sha256"
-(( $(stat -c %s "${output}.xz") < 2147483648 )) || {
+gzip -1 -k "$output"
+sha256sum "${output}.gz" >"${output}.gz.sha256"
+(( $(stat -c %s "${output}.gz") < 2147483648 )) || {
     echo 'Compressed candidate exceeds GitHub release asset limit' >&2; exit 1;
 }
-echo "Candidate ready: ${output}.xz"
+echo "Candidate ready: ${output}.gz"

@@ -24,7 +24,7 @@ la console et le journal du service.
 
 ## Utilisation après publication de l'image validée
 
-1. Vérifier le SHA-256 du fichier `.img.xz` publié. Avec Raspberry Pi Imager,
+1. Vérifier le SHA-256 du fichier `.img.gz` publié. Avec Raspberry Pi Imager,
    écrire cette image sur une **microSD saine d'au moins 8 Gio**. Sélectionner
    soigneusement la carte : le flash efface son contenu.
 2. Éteindre l'Orange Pi 5 Plus. Insérer la microSD et connecter un écran qui
