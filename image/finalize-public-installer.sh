@@ -21,6 +21,18 @@ rm -f "$root/etc/systemd/system/sockets.target.wants/ssh.socket"
 for name in ssh.service sshd.service ssh.socket; do
     ln -sfn /dev/null "$root/etc/systemd/system/$name"
 done
+# The clean Armbian image still ships a console autologin and the
+# .not_logged_in_yet marker. Together they launch an interactive root-password
+# wizard, even when armbian-firstrun.service is disabled.
+rm -f "$root/root/.not_logged_in_yet" \
+    "$root/etc/profile.d/armbian-check-first-login.sh" \
+    "$root/etc/profile.d/armbian-check-first-login-reboot.sh"
+rm -f "$root/etc/systemd/system/getty.target.wants/getty@tty1.service" \
+    "$root/etc/systemd/system/getty.target.wants/serial-getty@ttyFIQ0.service"
+rm -rf "$root/etc/systemd/system/getty@.service.d" \
+    "$root/etc/systemd/system/serial-getty@.service.d"
+ln -sfn /dev/null "$root/etc/systemd/system/getty@.service"
+ln -sfn /dev/null "$root/etc/systemd/system/serial-getty@.service"
 ln -sfn ../osmo-install-emmc.service "$units/osmo-install-emmc.service"
 
 # No reusable credentials or device identity may be inherited by a public image.
