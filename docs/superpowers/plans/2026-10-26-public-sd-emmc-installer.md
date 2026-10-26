@@ -18,7 +18,7 @@
 - Installation may begin only when the system actually booted from microSD; a wrong boot source must make no target writes.
 - Only HDMI-A-2 with EDID 1920x1080i50 is supported for the verified output; select connector and NV12 plane dynamically.
 - Source image is exactly 6 GiB; the full copied region must match readback before the target filesystem is resized.
-- Preserve a verified offline backup of the working eMMC before destructive hardware testing.
+- An offline backup of the working eMMC was offered before destructive hardware testing. The owner explicitly declined it on 26 October 2026. Keep the existing older personal rescue image, and record that it is not an exact backup of the current installation.
 - Publish no image until a new healthy microSD has installed eMMC and the user has physically confirmed image and sound after cold boot.
 
 ## Review Focus
@@ -72,7 +72,7 @@
 
 **Files:** local offline eMMC backup, candidate microSD, image/BELABOX_VALIDATION_2026-10-26.md or a new dated validation record.
 
-- [ ] Read the first 6 GiB and trailing GPT header of the currently working eMMC through MaskROM while powered off; hash and retain them with restoration instructions.
+- [x] Backup decision recorded: the owner explicitly declined the exact offline eMMC backup before this test; the existing older personal rescue image is retained locally.
 - [ ] Identify the new healthy microSD on the Mac, explicitly verify its device and size, flash the candidate and verify the written bytes.
 - [ ] Boot the Orange Pi from the microSD and prove the installer sees SD as root before it writes; confirm eMMC target and log the copy/readback/resize result.
 - [ ] Remove the SD, power-cycle, and verify eMMC root, 1080i50, NV12 video plane, healthy ext4, Pocket 3 picture that moves, and audible microphone sound.

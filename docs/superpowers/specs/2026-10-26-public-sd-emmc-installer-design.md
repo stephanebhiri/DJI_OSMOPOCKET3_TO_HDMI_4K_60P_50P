@@ -83,13 +83,11 @@ support de démarrage ; elle ne prétend pas que l'installation a eu lieu.
   copie et de comparaison sur des fichiers disques de test. Vérifier la
   syntaxe, le contenu de l'image, la taille, les hashes et le démarrage des
   services installés.
-- Sur le matériel réel, utiliser la nouvelle microSD saine. Avant de tester
-  l'effacement de l'eMMC fonctionnelle, conserver hors ligne en MaskROM une
-  sauvegarde vérifiée des 6 Gio initiaux qui contiennent l'unique partition
-  système et le chargeur, ainsi que l'en-tête GPT de fin de disque. Il n'est
-  pas nécessaire de copier les 61,9 Go, dont la majeure partie est hors
-  partition ; documenter la réparation du GPT lors d'une restauration.
-  Le test final exige démarrage de
+- Sur le matériel réel, utiliser la nouvelle microSD saine. Une sauvegarde
+  exacte de l'eMMC fonctionnelle a été proposée avant ce test. Le propriétaire
+  l'a explicitement refusée le 26 octobre 2026 ; l'ancienne image personnelle
+  locale reste un secours incomplet, et cette limite est consignée dans le
+  compte rendu. Le test final exige démarrage de
   la microSD, installation, retrait de la carte, démarrage à froid sur eMMC,
   mode 1080i50, image mobile, son et absence d'erreur ext4.
 - Publier l'image et son hash seulement après ce test de bout en bout. Le

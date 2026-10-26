@@ -29,7 +29,8 @@ la console et le journal du service.
    soigneusement la carte : le flash efface son contenu.
 2. Éteindre l'Orange Pi 5 Plus. Insérer la microSD et connecter un écran qui
    accepte 1080i50 à **HDMI-A-2**, la sortie près de l'Ethernet sur la machine
-   testée. Laisser l'alimentation stable durant l'installation.
+   testée. Sauvegarder les données eMMC à conserver avant le démarrage de
+   l'installateur. Laisser l'alimentation stable durant l'installation.
 3. Démarrer. Si le microprogramme choisit une eMMC déjà amorçable plutôt que
    la microSD, l'installateur ne s'exécute pas ; il faut obtenir un démarrage
    réel sur microSD. Le contrôle de la racine microSD est obligatoire avant
@@ -55,7 +56,7 @@ SHA-256. Le script ne flashe aucun périphérique physique.
 
 La validation requise avant publication est détaillée dans le
 [plan d'installation](../docs/superpowers/plans/2026-10-26-public-sd-emmc-installer.md) :
-sauvegarde hors ligne de l'eMMC fonctionnelle, flash d'une nouvelle microSD,
+décision de sauvegarde consignée, flash d'une nouvelle microSD,
 installation réelle, démarrage à froid sans microSD, image mobile 1080i50 et
 son du micro. Le [compte rendu de la BELABOX personnelle](BELABOX_VALIDATION_2026-10-26.md)
 ne vaut pas validation de l'image publique.
