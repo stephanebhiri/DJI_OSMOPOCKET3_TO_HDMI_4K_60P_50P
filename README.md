@@ -11,7 +11,7 @@ envoyé sur HDMI.
 | Matériel testé | Une Orange Pi 5 Plus dans une BELABOX, système installé sur son eMMC. |
 | Image et son | Après coupure complète, l'utilisateur a confirmé l'image mobile et le son du micro sur l'écran HDMI. La racine était /dev/mmcblk0p1, la sortie 1920×1080i50 et le plan vidéo NV12 actif. |
 | Démarrage vidéo | Le premier lancement peut encore subir un SIGSEGV. L'option --no-fault permet à systemd de relancer le service ; ce rétablissement automatique a été observé au dernier démarrage à froid. **La cause interne du plantage reste à résoudre.** |
-| Image à télécharger | **Aucune image corrigée publique prête à flasher.** Les anciennes images v1.0/v2.0 ont été retirées. L'image personnelle de la BELABOX contient une clé SSH de maintenance et n'est pas distribuée. |
+| Image à télécharger | **Aucune image corrigée publique prête à flasher.** Un [installateur microSD vers eMMC](image/README.md) est en construction et doit encore être testé sur une autre carte saine. Les anciennes images v1.0/v2.0 ont été retirées. L'image personnelle de la BELABOX contient une clé SSH de maintenance et n'est pas distribuée. |
 | Autre Orange Pi, écran ou installation NVMe | Parcours complet non validé avec ces corrections. Les identifiants DRM, le mode EDID et le démarrage doivent être contrôlés sur le matériel concerné. |
 
 Le [compte rendu matériel](image/BELABOX_VALIDATION_2026-10-26.md) sépare les
@@ -27,15 +27,16 @@ l'installation actuelle.
 | Comprendre pourquoi l'installation a échoué puis fonctionné | [Procédure et diagnostic BELABOX](image/BELABOX_EMMC_RUNBOOK_FR.md) |
 | Voir exactement ce qui a été testé sur eMMC | [Compte rendu du 26 octobre 2026](image/BELABOX_VALIDATION_2026-10-26.md) |
 | Reconstruire les composants logiciels | [Versions figées](image/source-lock.txt) et [provisionnement ARM64 Noble](image/provision-rootfs.sh) |
+| Suivre la future installation autonome eMMC | [Installateur microSD → eMMC](image/README.md) et [script de construction](image/build-public-installer.sh) |
 | Comprendre les anciennes images retirées | [Historique v2.0](image/DUAL_IMAGES.md) |
 
 La reconstruction part de la base Armbian Ubuntu Noble et des révisions
 précisées dans le fichier image/source-lock.txt. Le script
-image/provision-rootfs.sh compile la pile sur ARM64 et installe les services et
-les correctifs. **Ce dépôt ne propose pas une commande unique validée pour
-convertir toute BELABOX ou toute Orange Pi.** Le flash eMMC décrit dans la
-procédure utilise une image personnelle vérifiée localement ; il efface l'eMMC
-de la machine visée.
+image/build-public-installer.sh construit un candidat sur Linux ARM64, et
+image/provision-rootfs.sh compile la pile et ses correctifs. **L'installateur
+public n'est pas encore validé matériellement.** Le flash eMMC décrit dans la
+procédure BELABOX utilise une image personnelle vérifiée localement ; il efface
+l'eMMC de la machine visée.
 
 ## Configuration testée
 
@@ -47,8 +48,8 @@ de la machine visée.
 - Source H.264 : fork BELABOX de libuvc avec le
   [correctif de négociation 4K50](image/patches/belabox-uvc-stale-payload.patch).
 - Décodage mppvideodec, affichage kmssink sur le plan NV12 **114** de cette
-  carte. Le connecteur HDMI-A-2 et le mode 1080i50 sont recherchés à chaque
-  démarrage ; **ne pas figer un numéro EDID** tel que #13.
+  carte. Le connecteur HDMI-A-2, le mode 1080i50 et le plan vidéo sont
+  recherchés à chaque démarrage ; **ne pas figer un numéro EDID** tel que #13.
 - Son : capture ALSA nommée DJIPocket3, sortie ALSA HDMI nommée
   rockchiphdmi1. Les services vidéo et audio sont indépendants.
 
@@ -87,7 +88,7 @@ versions de noyau, des identifiants DRM ou des images qui ne correspondent pas
 - [Ancien guide détaillé](README_DETAILED.md),
   [essais sur une Orange Pi neuve](TEST_ON_FRESH_ORANGEPI.md),
   [création d'image](CREATE_IMAGE.md),
-  [installateur NVMe distinct](image/README.md).
+  [installateur NVMe distinct](image/NVME_INSTALLER_LEGACY.md).
 
 Ils restent accessibles comme archives techniques, **pas comme procédure
 actuelle prête à exécuter**.

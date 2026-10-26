@@ -2,7 +2,7 @@
 # Clone the prepared, read-only SD image to the Orange Pi 5 Plus eMMC once.
 set -Eeuo pipefail
 
-SOURCE_BYTES=6442450944
+SOURCE_BYTES=${SOURCE_BYTES:-6442450944}
 STATE_FILE=${STATE_FILE:-/var/lib/osmo-emmc-install/state}
 
 die() { echo "Installation eMMC refusee: $*" >&2; exit 1; }
@@ -33,6 +33,16 @@ dji_hdmi_supported() {
 dji_source_files_valid() {
     local manifest=/usr/share/doc/dji-osmo2hdmi/installer-critical.sha256
     [[ -s $manifest ]] && (cd / && sha256sum -c "$manifest" --quiet)
+}
+dji_copy_source() {
+    dd if="$1" of="$2" bs=4M count="$(( $3 / 4194304 ))" conv=fsync status=progress
+}
+dji_clone_and_verify() {
+    local source=$1 target=$2 bytes=$3
+    (( bytes > 0 && bytes % 4194304 == 0 )) || die 'taille de copie invalide'
+    dji_copy_source "$source" "$target" "$bytes" || die 'copie eMMC echouee'
+    echo 'Verification bit a bit de la copie...'
+    cmp -n "$bytes" "$source" "$target" || die 'verification eMMC echouee'
 }
 
 preflight() {
@@ -76,9 +86,7 @@ install_emmc() {
     sync
     mount -o remount,ro / || die 'impossible de figer la carte SD en lecture seule'
     echo "Copie de $source_disk vers $target; ne pas couper l'alimentation."
-    dd if="$source_disk" of="$target" bs=4M count=1536 conv=fsync status=progress
-    echo 'Verification bit a bit de la copie...'
-    cmp -n "$SOURCE_BYTES" "$source_disk" "$target" || die 'verification eMMC echouee'
+    dji_clone_and_verify "$source_disk" "$target" "$SOURCE_BYTES"
 
     parted -s -f "$target" print >/dev/null
     parted -s "$target" resizepart 1 100%

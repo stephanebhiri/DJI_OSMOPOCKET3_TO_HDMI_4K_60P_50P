@@ -59,4 +59,14 @@ assert_rejected 'source files mismatch'
 TEST_SOURCE_OK=1
 touch "$STATE_FILE"
 assert_rejected 'previous install attempt'
+
+SOURCE_BYTES=4194304
+dd if=/dev/urandom of="$tmp/source" bs=1m count=4 status=none
+dji_clone_and_verify "$tmp/source" "$tmp/target" "$SOURCE_BYTES" >/dev/null
+cmp "$tmp/source" "$tmp/target" >/dev/null
+dji_copy_source() { printf 'corrupted target\n' >"$2"; }
+if (dji_clone_and_verify "$tmp/source" "$tmp/target" "$SOURCE_BYTES") >/dev/null 2>&1; then
+    echo 'Accepted a corrupted eMMC readback' >&2
+    exit 1
+fi
 echo 'eMMC installer preflight refusal cases: PASS'
