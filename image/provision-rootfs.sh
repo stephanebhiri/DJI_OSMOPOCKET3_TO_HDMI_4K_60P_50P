@@ -91,15 +91,19 @@ dji_provision() {
   install -m 644 "$project/99-dji-camera.rules" /etc/udev/rules.d/
   install -m 755 "$project/dji-stream.sh" /usr/local/bin/dji-stream.sh
   install -m 644 "$project/dji-h264-stream.service" /etc/systemd/system/
+  install -m 755 "$project/image/parse-hdmi-mode.sh" /usr/local/bin/parse-hdmi-mode.sh
+  install -m 755 "$project/image/osmo-hdmi50.sh" /usr/local/bin/osmo-hdmi50.sh
+  install -m 644 "$project/image/osmo-hdmi50.service" /etc/systemd/system/
   install -m 755 "$project/image/dji-hdmi-audio.sh" /usr/local/bin/dji-hdmi-audio.sh
   install -m 644 "$project/image/dji-hdmi-audio.service" /etc/systemd/system/
   install -m 755 "$project/image/dji-install-to-nvme.sh" /usr/local/sbin/
   install -m 644 "$project/image/dji-install-to-nvme.service" /etc/systemd/system/
   dji_set_boot_args /boot/armbianEnv.txt
-  systemctl enable dji-h264-stream.service dji-hdmi-audio.service dji-install-to-nvme.service
+  systemctl disable dji-install-to-nvme.service >/dev/null 2>&1 || true
+  systemctl enable osmo-hdmi50.service dji-h264-stream.service dji-hdmi-audio.service
   mkdir -p /usr/share/doc/dji-osmo2hdmi
   cp "$project/image/source-lock.txt" /usr/share/doc/dji-osmo2hdmi/
-  echo 'Video stack and one-shot NVMe installer provisioned.'
+  echo 'Video and HDMI audio stack provisioned; NVMe installer is disabled.'
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
