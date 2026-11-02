@@ -158,3 +158,11 @@ archive is `OSMO2HDMI-BELABOX-working-2026-11-02-rescue.img.gz`, SHA-256
 decompressed raw SHA-256 is
 `af99d7f18547e623772d01c94809a87ee6e5a265bffb157c941f57a9dded3841`.
 This is a verified offline rescue candidate, **not a physically tested restore**.
+
+After the read-only capture, the owner disconnected the Mac data cable,
+power-cycled the Orange Pi without microSD and reported that picture and sound
+both worked. This validates that the original eMMC resumed normal operation
+after capture. The last network check at its previous address
+`192.168.75.50` did not connect, so no new SSH measurements are claimed for
+this boot. This observation does not test flashing the rescue image or the
+public v4 installer.
