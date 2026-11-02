@@ -14,7 +14,7 @@ The earlier Orange Pi installation produced Pocket 3 picture and microphone audi
 ## Reproduced faults and fixes
 
 1. The BELABOX libuvc fork calls `UVC_GET_MAX` before selecting the requested format. After 1080p30, the Pocket 3 returned a stale payload maximum of `622080`; for 4K50 its accepted control returned `2488320`. The fork rejected the valid 4K50 format/frame/interval as `Invalid mode` because it also compared these payload sizes. `belabox-uvc-stale-payload.patch` compares format, frame and interval. A 1080p30→4K50 test then delivered 100 encoded buffers and EOS successfully.
-2. The video script did not specify an NV12 capable KMS plane. Plane 114 was verified on this board. The running pipeline uses `kmssink connector-id=236 plane-id=114 sync=true restore-crtc=false`.
+2. The video script did not specify an NV12 capable KMS plane. Plane 114 was verified on this board. The pipeline used `kmssink connector-id=236 plane-id=114 sync=true restore-crtc=false` at this October test; the November retest below changed `sync`.
 3. The camera udev rule restarted video for every `video4linux` add event, including repeated reprobes, and the service reached its start limit. The rule now triggers once per USB device add; the service can keep retrying while the camera is absent.
 
 ## Hardware evidence before cold boot
@@ -55,3 +55,57 @@ The earlier Orange Pi installation produced Pocket 3 picture and microphone audi
 - Pocket 3 `2ca3:0023`, all three services active, HDMI-A-2 `1920x1080i50`, and KMS plane 114 active with a 3840×2160 NV12 framebuffer. No ext4, MMC or I/O error appeared in the boot log.
 - Early service attempts failed while USB audio/video was still enumerating, then the first video pipeline reached PLAYING and exited with `status=11/SEGV`. With `--no-fault`, systemd automatically started a new process (PID 1408); the live picture returned without any manual service command. The user physically confirmed **moving image and microphone sound** on HDMI after this cold boot.
 - The recurring first-launch segmentation fault is **not root-cause fixed**. The installed restart behavior recovered during this test. Continue to treat a future lack of picture or unexpectedly repeated crashes as a fault and inspect `journalctl -b -u dji-h264-stream.service` and the KMS plane before claiming healthy operation.
+
+## 2 November 2026: motion and audio recheck on the same eMMC
+
+The owner reported that the existing output was jerky and that microphone
+audio was inaudible. The board was identified again by Ethernet MAC
+`c0:74:2b:fe:75:eb`, now at `192.168.75.50`; `/` was still
+`/dev/mmcblk0p1` on vendor kernel `6.1.115-vendor-rk35xx`. Pocket 3 was in
+webcam mode `2ca3:0023`, HDMI-A-2 was connected, and DRM reported
+`1920x1080i50` with a 3840×2160 NV12 framebuffer on plane 114. This mode
+report alone had **not** proved smooth motion.
+
+- With the installed `kmssink sync=true`, sampling the plane's framebuffer ID
+  for 5.994 s found 116 changes: **19.35 changes/s**. GStreamer also logged
+  that the pipeline had insufficient buffering for the sink deadline.
+- A source-only H.264 test measured approximately **50.2 buffers/s** with no
+  reported drops; a decoded NV12 test measured approximately **50.4/s** with
+  no reported drops. The loss therefore occurred at the display sink.
+- Changing only `kmssink` to `sync=false` in a temporary pipeline produced
+  **46.43 framebuffer changes/s**; the restarted normal service then produced
+  **49.82 changes/s** over 5 s. The owner confirmed that the moving image was
+  markedly smoother. The installed video script now has `sync=false`.
+- Direct Pocket 3 capture at 48 kHz stereo for 8 s contained nonzero audio on
+  both channels. A test tone through `rockchiphdmi1` was heard on the HDMI
+  monitor. A temporary gain trial was **reverted**: the installed audio script
+  matches the repository source byte for byte and has no gain element. The
+  owner then confirmed that the microphone sounded good with the image fluid.
+- The three services were active, HDMI remained at `1920x1080i50`, and the
+  Pocket 3 capture and HDMI playback PCM devices were `RUNNING` at the end of
+  the test. The owner's direct picture and sound confirmation is the final
+  physical evidence for this session.
+
+This verifies the observed display cadence and physical result on this one
+BELABOX/monitor. It does **not** establish field-accurate 50p-to-50i mapping
+on all displays. A software reboot at 13:51 UTC started again from
+`/dev/mmcblk0p1` with `1920x1080i50`, but the Pocket 3 initially enumerated
+as `2ca3:0020` (file-transfer mode). The owner explained that their normal
+procedure after reboot is to **unplug and reconnect the Pocket 3 USB cable**;
+this had not yet been done when the post-reboot video check failed. USB mode
+briefly changed to `2ca3:0023` during subsequent enumerations. The webcam
+then delivered about 50 encoded buffers/s, but decoding yielded no image.
+The local `/root/.spspps/0` cache had grown to 1,022 bytes and contained
+invalid SPS/PPS NAL headers (`07`/`08`). Removing it caused the plugin to use
+its default 39 bytes, which also failed to restore the image. The 39-byte
+SPS/PPS cache recovered from the 26 October raw image differs from those
+defaults; after installing that exact file and restarting only the video
+service, KMS plane 114 again held changing 3840×2160 NV12 framebuffers. The
+owner confirmed **live moving picture and microphone sound**. SHA-256 of the
+working cache: `116eaddd34020344a16a378759b0a1f41fd07d9ca3e8aaf7ed0f7611ad66169e`.
+The active cache was made immutable with `chattr +i`; this protects the
+verified bytes from being overwritten. The precise cause of the bad cache
+write is still unproven. Automatic camera recovery has **not** been
+demonstrated. A cold power cycle has not yet been repeated
+with this cache protection and the 2 November `sync=false` change. The exact installed scripts and cache are preserved in
+[`known-good-belabox-2026-11-02/`](known-good-belabox-2026-11-02/).

@@ -1,28 +1,73 @@
-# Carte SD d'installation automatique vers NVMe — Orange Pi 5 Plus
+# Installateur public microSD → eMMC (Orange Pi 5 Plus)
 
-> **Installateur NVMe distinct, non validé de bout en bout avec les dernières
-> corrections BELABOX.** Ce guide ne décrit pas l'installation eMMC vérifiée
-> le 26 octobre 2026. Voir le [README principal](../README.md) et la
-> [procédure eMMC](BELABOX_EMMC_RUNBOOK_FR.md).
+**État : candidat local construit, aucun téléchargement public validé à ce jour.**
+Le candidat `v3` a passé ses contrôles de construction et de fichier, mais
+**n'a pas été redémarré sur microSD réelle**. Il précède aussi la correction
+de fluidité `kmssink sync=false` et de cache H.264 SPS/PPS du 2 novembre 2026 : il faut le reconstruire
+et le tester de bout en bout avant tout téléchargement public. La procédure
+ci-dessous décrit l'installateur en cours de test. Ne pas utiliser
+les anciennes images des releases v1/v2 ni l'image personnelle BELABOX comme
+substitut : elles ne correspondent pas à cet installateur.
 
-Cette image démarre sur une Orange Pi 5 Plus, installe Armbian Ubuntu Noble et la chaîne DJI Pocket 3 → HDMI sur l'unique NVMe, programme U-Boot dans la mémoire SPI, puis éteint la carte. Après extinction, retirer la SD et rallumer l'Orange Pi pour démarrer depuis le NVMe.
+## Ce que fait la carte
 
-## Contenu
+La carte microSD contient Armbian Ubuntu Noble, les bibliothèques Rockchip MPP,
+le module BELABOX corrigé pour la Pocket 3, GStreamer et les services vidéo et
+audio. Au premier démarrage, le service vérifie le modèle Orange Pi 5 Plus, le
+démarrage effectif sur microSD, la présence d'une seule eMMC non montée d'au
+moins 8 Gio, l'intégrité des fichiers essentiels et le mode 1920×1080i50 sur
+la sortie HDMI-A-2. **Après ces contrôles, il efface entièrement l'eMMC**,
+copie les 6 Gio de l'image, compare les octets copiés, agrandit la partition
+ext4 et active les services vidéo et audio sur l'eMMC. Il s'éteint ensuite.
 
-- Armbian Noble minimal, noyau vendor RK3588, paquets mis à jour le 22 octobre 2026.
-- GStreamer 1.24 et modules `mppvideodec` et `libuvch264src` compilés depuis les sources listées dans `source-lock.txt`.
-- Service vidéo et règles udev du dépôt DJI.
-- Installateur de premier démarrage `dji-install-to-nvme.service`.
+La carte refuse d'écrire si elle a démarré sur l'eMMC, si la cible est absente
+ou ambiguë, si l'écran n'annonce pas le mode demandé, ou si les fichiers
+essentiels ne correspondent pas au manifeste. Une tentative échouée n'est pas
+relancée automatiquement avec la même microSD ; lire le message affiché sur
+la console et le journal du service.
 
-## Utilisation
+## Utilisation après publication de l'image validée
 
-1. Décompresser ou sélectionner directement le fichier `.img.gz` dans Raspberry Pi Imager ou balenaEtcher, puis l'écrire sur une SD d'au moins 8 Go. Vérifier soigneusement le disque choisi : son contenu sera effacé.
-2. Orange Pi éteinte, insérer la SD et brancher la Pocket 3 à son entrée USB et l'écran à la sortie HDMI.
-3. Mettre sous tension. Ne pas couper l'alimentation pendant l'installation du NVMe et du SPI. L'installation peut prendre plusieurs minutes. La carte s'éteint automatiquement lorsqu'elle a terminé.
-4. Après extinction, retirer la SD, puis rallumer. Le système et le service vidéo démarrent depuis le NVMe.
+1. Vérifier le SHA-256 du fichier `.img.gz` publié. Avec Raspberry Pi Imager,
+   écrire cette image sur une **microSD saine d'au moins 8 Gio**. Sélectionner
+   soigneusement la carte : le flash efface son contenu.
+2. Éteindre l'Orange Pi 5 Plus. Insérer la microSD et connecter un écran qui
+   accepte 1080i50 à **HDMI-A-2**, la sortie près de l'Ethernet sur la machine
+   testée. Sauvegarder les données eMMC à conserver avant le démarrage de
+   l'installateur. Laisser l'alimentation stable durant l'installation.
+3. Démarrer. Si le microprogramme choisit une eMMC déjà amorçable plutôt que
+   la microSD, l'installateur ne s'exécute pas ; il faut obtenir un démarrage
+   réel sur microSD. Le contrôle de la racine microSD est obligatoire avant
+   toute écriture eMMC.
+4. Attendre l'extinction automatique annoncée par l'installateur. Ne pas
+   retirer la carte durant la copie ni pendant la vérification.
+5. Retirer la microSD, brancher la Pocket 3 sur un port USB de données,
+   sélectionner **webcam** sur son écran, puis rallumer. La vidéo et le son
+   doivent démarrer sans assistant de configuration. Si la caméra revient en
+   mode transfert de fichiers après un redémarrage, débrancher puis rebrancher
+   son câble USB et sélectionner à nouveau « webcam ». Vérifier une image
+   mobile et le son sur l'écran ; le redémarrage autonome de la caméra n'a pas
+   encore été démontré.
 
-**Le premier démarrage efface entièrement l'unique NVMe détecté.** L'installateur refuse de démarrer si le modèle de carte est différent, si le système ne tourne pas sur SD, si le nombre de NVMe n'est pas exactement un, si ce NVMe est utilisé, ou si la mémoire SPI est absente. Une tentative échouée n'est pas répétée automatiquement ; consulter la console série/HDMI et `journalctl -u dji-install-to-nvme.service` avant toute reprise.
+Il n'y a **aucun mot de passe ou clé SSH fournis**. SSH est désactivé par défaut.
+Cette édition est dédiée à un appareil de sortie vidéo autonome ; l'accès de
+maintenance nécessite une configuration locale explicite par le propriétaire.
 
-Pour un contrôle du fichier téléchargé : `shasum -a 256 nom-du-fichier.img.gz`, puis comparer à la valeur du fichier `.sha256` fourni.
+## Reconstruction et contrôles
 
-Le fonctionnement vidéo final et le démarrage sans SD doivent être confirmés sur le matériel réel. La sortie HDMI est configurée en 1080i50 conformément au projet ; le flux caméra H.264 peut être en 4K50.
+Le script [`build-public-installer.sh`](build-public-installer.sh) fonctionne
+sur un hôte Linux ARM64 avec périphériques loop et au moins 10 Gio libres.
+Il vérifie la base Armbian et les révisions de [`source-lock.txt`](source-lock.txt),
+compile les composants dans l'image, supprime les identifiants et journaux,
+installe le manifeste de hachages et génère un candidat compressé avec ses
+SHA-256. Le script ne flashe aucun périphérique physique.
+
+La validation requise avant publication est détaillée dans le
+[plan d'installation](../docs/superpowers/plans/2026-10-26-public-sd-emmc-installer.md) :
+décision de sauvegarde consignée, flash d'une nouvelle microSD,
+installation réelle, démarrage à froid sans microSD, image mobile 1080i50 et
+son du micro. Le [compte rendu de la BELABOX personnelle](BELABOX_VALIDATION_2026-10-26.md)
+ne vaut pas validation de l'image publique.
+
+L'[ancien installateur NVMe](NVME_INSTALLER_LEGACY.md) est conservé comme
+archive technique séparée.

@@ -5,10 +5,18 @@ set -Eeuo pipefail
 DJI_SOURCE_ROOT=${DJI_SOURCE_ROOT:-/opt/dji-build}
 
 dji_set_boot_args() {
-  local file="$1" args arg tmp
+  local file="$1" args arg tmp filtered
   [[ -f "$file" ]] || { echo "Missing boot config: $file" >&2; return 1; }
   args="$(sed -n 's/^extraargs=//p' "$file" | head -1)"
-  for arg in 'usbcore.quirks=2ca3:0023:i' 'video=HDMI-A-1:1920x1080i@50' 'cma=256M'; do
+  filtered=''
+  for arg in $args; do
+    case "$arg" in
+      video=HDMI-A-1:*) ;;
+      *) filtered="${filtered:+$filtered }$arg" ;;
+    esac
+  done
+  args=$filtered
+  for arg in 'usbcore.quirks=2ca3:0023:i' 'cma=256M'; do
     case " $args " in
       *" $arg "*) ;;
       *) args="${args:+$args }$arg" ;;
@@ -37,7 +45,7 @@ dji_provision() {
   local rockchip="$DJI_SOURCE_ROOT/gstreamer-rockchip" uvc="$DJI_SOURCE_ROOT/gstlibuvch264src"
   [[ "$(uname -m)" == aarch64 ]] || { echo 'ARM64 build environment required' >&2; return 1; }
   grep -q 'VERSION_CODENAME=noble' /etc/os-release || { echo 'Ubuntu Noble required' >&2; return 1; }
-  for path in "$project/dji-stream.sh" "$mpp/CMakeLists.txt" "$rockchip/meson.build" "$uvc/libuvc/CMakeLists.txt"; do
+  for path in "$project/dji-stream.sh" "$project/image/known-good-belabox-2026-11-02/pocket3-4k50.spspps" "$mpp/CMakeLists.txt" "$rockchip/meson.build" "$uvc/libuvc/CMakeLists.txt"; do
     [[ -f "$path" ]] || { echo "Missing source: $path" >&2; return 1; }
   done
 
@@ -48,7 +56,8 @@ dji_provision() {
     libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev \
     libgstreamer-plugins-bad1.0-dev libdrm-dev libusb-1.0-0-dev \
     libudev-dev cmake meson ninja-build pkg-config git build-essential \
-    autoconf automake libtool autopoint gettext libdrm-tests
+    autoconf automake libtool autopoint gettext libdrm-tests python3 \
+    parted e2fsprogs util-linux
   [[ "$(gst-launch-1.0 --version)" == *'1.24.'* ]] || { echo 'GStreamer 1.24 required' >&2; return 1; }
 
   cmake -S "$mpp" -B "$mpp/build" -DRKPLATFORM=ON -DHAVE_DRM=ON
@@ -94,7 +103,15 @@ dji_provision() {
   install -m 644 "$project/99-dji-camera.rules" /etc/udev/rules.d/
   install -m 755 "$project/dji-stream.sh" /usr/local/bin/dji-stream.sh
   install -m 644 "$project/dji-h264-stream.service" /etc/systemd/system/
+  # A corrupt cached SPS/PPS previously left audio running without picture.
+  # Preserve the 4K50 pair recovered from the working Pocket 3 installation.
+  install -d -m 700 /root/.spspps
+  if [[ -e /root/.spspps/0 ]]; then chattr -i /root/.spspps/0; fi
+  install -m 644 "$project/image/known-good-belabox-2026-11-02/pocket3-4k50.spspps" /root/.spspps/0
+  chattr +i /root/.spspps/0
   install -m 755 "$project/image/parse-hdmi-mode.sh" /usr/local/bin/parse-hdmi-mode.sh
+  install -m 755 "$project/image/parse-encoder-mask.sh" /usr/local/bin/parse-encoder-mask.sh
+  install -m 755 "$project/image/parse-kms-plane.py" /usr/local/bin/parse-kms-plane.py
   install -m 755 "$project/image/osmo-hdmi50.sh" /usr/local/bin/osmo-hdmi50.sh
   install -m 644 "$project/image/osmo-hdmi50.service" /etc/systemd/system/
   install -m 755 "$project/image/dji-hdmi-audio.sh" /usr/local/bin/dji-hdmi-audio.sh

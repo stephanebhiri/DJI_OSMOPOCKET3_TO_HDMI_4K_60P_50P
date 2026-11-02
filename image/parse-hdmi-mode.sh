@@ -4,13 +4,14 @@
 # EDID mode index for 1920x1080i50. Both IDs can change between systems.
 /^[[:space:]]*[0-9]+[[:space:]]+[0-9]+[[:space:]]+connected[[:space:]]+HDMI-A-2([[:space:]]|$)/ {
     connector = $1
+    encoder = $2
     in_target = 1
     next
 }
 
 in_target && /^[[:space:]]*#[0-9]+[[:space:]]+1920x1080i[[:space:]]+50[.]00([[:space:]]|$)/ {
     sub(/^#/, "", $1)
-    print connector, $1
+    print connector, $1, encoder
     found = 1
     exit
 }
