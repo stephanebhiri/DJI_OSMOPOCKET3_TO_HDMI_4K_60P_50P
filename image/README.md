@@ -10,9 +10,10 @@ statiques. **Elle n'a pas encore été gravée ni démarrée sur microSD réelle
 l'installation eMMC et l'image/son après démarrage restent à vérifier avant
 une publication comme version finale. La procédure ci-dessous décrit cet
 installateur. Le fichier et son SHA-256 sont conservés dans une
-[release GitHub en brouillon](https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P/releases/tag/untagged-8e4aa93b30b15998f1cf),
-tag `v4-sd-emmc-candidate-2026-11-02` ; elle n'est pas accessible comme une
-release publique finale. Ne pas utiliser
+release GitHub en brouillon, tag `v4-sd-emmc-candidate-2026-11-02` ;
+**elle est inaccessible aux visiteurs du dépôt**. Il n'existe donc actuellement
+aucun téléchargement public de cette image. Le R2 de secours personnel est
+également privé. Ne pas utiliser
 les anciennes images des releases v1/v2 ni l'image personnelle BELABOX comme
 substitut : elles ne correspondent pas à cet installateur.
 

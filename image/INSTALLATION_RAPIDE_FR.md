@@ -5,6 +5,11 @@ explique les pannes rencontrées ; le [relevé matériel](BELABOX_VALIDATION_202
 distingue mesures et confirmation sur l'écran. Les scripts et le cache de la
 BELABOX fonctionnelle sont dans [known-good-belabox-2026-11-02/](known-good-belabox-2026-11-02/).
 
+**Disponibilité : il n'existe actuellement aucun téléchargement public de
+l'image.** Le candidat microSD est réservé aux mainteneurs dans un brouillon
+GitHub. Le secours R2 est privé et réservé au propriétaire. Les instructions
+ci-dessous s'appliquent aux personnes disposant déjà de l'archive concernée.
+
 ## Avant de commencer
 
 - Carte **Orange Pi 5 Plus** avec eMMC ; Pocket 3 en mode **webcam** (`2ca3:0023`).
@@ -22,7 +27,8 @@ BELABOX fonctionnelle sont dans [known-good-belabox-2026-11-02/](known-good-bela
 1. Vérifier le SHA-256 de
    `OSMO2HDMI-OrangePi5Plus-public-SD-eMMC-v4-2026-11-02.img.gz` :
    `1ffc82479cdd5a69841717704f0ebe8b1137b553fe49c15281fc8b264f9867a8`.
-   Le fichier est dans la [release en brouillon](https://github.com/stephanebhiri/DJI_OSMOPOCKET3_TO_HDMI_4K_60P_50P/releases/tag/untagged-8e4aa93b30b15998f1cf).
+   Le fichier est dans une release en brouillon, tag
+   `v4-sd-emmc-candidate-2026-11-02`, réservée aux mainteneurs.
 2. Graver sur une **microSD saine d'au moins 8 Gio**, l'insérer dans le slot
    microSD, brancher HDMI-A-2, puis démarrer. Le système doit réellement
    démarrer sur microSD ; sinon l'installateur refuse d'écrire l'eMMC.
@@ -43,7 +49,7 @@ le chargeur RK3588, la sélection de l'eMMC et la comparaison après écriture.
 Un cliché hors ligne de l'eMMC fonctionnelle a été lu le 2 novembre, après
 les corrections vidéo et audio. Les deux archives privées sont désormais dans
 R2, bucket `osmo2hdmi-backups`, préfixe `belabox/2026-11-02/`.
-Suivre la [récupération depuis R2](SAUVEGARDE_R2_FR.md) pour les télécharger ;
+Le propriétaire authentifié peut suivre la [récupération depuis R2](SAUVEGARDE_R2_FR.md) ;
 les grosses copies locales ont été retirées après vérification du téléchargement.
 L'archive exacte est `OSMO2HDMI-BELABOX-working-2026-11-02.img.gz`.
 Elle conserve les octets tels que lus, avec le journal ext4 à rejouer et

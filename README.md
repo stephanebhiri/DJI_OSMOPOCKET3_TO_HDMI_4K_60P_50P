@@ -4,6 +4,12 @@ Ce dépôt contient les sources et la procédure d'une chaîne vidéo **Pocket 3
 4K50 → décodage Rockchip MPP → HDMI-A-2 1080i50**, avec le micro de la caméra
 envoyé sur HDMI.
 
+**Téléchargement public : aucune image prête à installer n'est actuellement
+disponible.** Le candidat microSD v4 est dans une release GitHub en brouillon,
+accessible seulement aux personnes autorisées sur le dépôt. Le R2 décrit dans
+ces pages est une sauvegarde personnelle privée ; les visiteurs du dépôt ne
+peuvent pas la télécharger. Les sources et procédures ci-dessous sont publiques.
+
 ## État vérifié — 2 novembre 2026
 
 | Point | État |
