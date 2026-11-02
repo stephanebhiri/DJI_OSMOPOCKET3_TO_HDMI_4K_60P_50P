@@ -1,11 +1,15 @@
 # Installateur public microSD → eMMC (Orange Pi 5 Plus)
 
-**État : candidat local construit, aucun téléchargement public validé à ce jour.**
-Le candidat `v3` a passé ses contrôles de construction et de fichier, mais
-**n'a pas été redémarré sur microSD réelle**. Il précède aussi la correction
-de fluidité `kmssink sync=false` et de cache H.264 SPS/PPS du 2 novembre 2026 : il faut le reconstruire
-et le tester de bout en bout avant tout téléchargement public. La procédure
-ci-dessous décrit l'installateur en cours de test. Ne pas utiliser
+**État : candidat v4 local gravable, aucune version finale publiée.**
+Le fichier `OSMO2HDMI-OrangePi5Plus-public-SD-eMMC-v4-2026-11-02.img.gz`
+vient du commit `aedf3d2` de `main`. Il contient `kmssink sync=false` et le
+cache H.264 SPS/PPS corrigé et protégé. Son SHA-256 est
+`1ffc82479cdd5a69841717704f0ebe8b1137b553fe49c15281fc8b264f9867a8`.
+L'archive, son système de fichiers et sa configuration ont passé les contrôles
+statiques. **Elle n'a pas encore été gravée ni démarrée sur microSD réelle** :
+l'installation eMMC et l'image/son après démarrage restent à vérifier avant
+une publication comme version finale. La procédure ci-dessous décrit cet
+installateur. Ne pas utiliser
 les anciennes images des releases v1/v2 ni l'image personnelle BELABOX comme
 substitut : elles ne correspondent pas à cet installateur.
 

@@ -60,6 +60,26 @@ la BELABOX. Le fichier v3 existant est immuable et précède ces corrections.
 **Ne pas le publier ni l'utiliser comme image finale** ; reconstruire à partir de la
 source corrigée, puis refaire l'essai microSD → eMMC complet.
 
+## Candidat v4 du 2 novembre 2026 : fichier livré localement
+
+- Source : commit `aedf3d253fceff93f44e478d0d242d7a20db952b` de `main`,
+  base Armbian et révisions externes indiquées dans `source-lock.txt`.
+- Construction : Linux ARM64 dans Colima, image brute de 6 Gio, SHA-256
+  `16a02dd117d8ecc9dfb7ee766bd9e271bef984eafed7d5c267fd5437099d75f5`.
+- Archive `OSMO2HDMI-OrangePi5Plus-public-SD-eMMC-v4-2026-11-02.img.gz` :
+  **1 532 930 713 octets**, SHA-256
+  `1ffc82479cdd5a69841717704f0ebe8b1137b553fe49c15281fc8b264f9867a8`.
+- `e2fsck -f -n` du système brut sans erreur ; audit public et manifeste
+  des fichiers critiques réussis après montage en lecture seule. Cache SPS/PPS
+  de 39 octets au SHA-256 `116eaddd34020344a16a378759b0a1f41fd07d9ca3e8aaf7ed0f7611ad66169e`,
+  attribut immuable présent, script vidéo avec `sync=false`.
+- Décompression complète de l'archive : SHA-256 identique à celui du brut.
+  Copie sur Mac : SHA-256 identique à l'archive de construction.
+
+**Limite :** aucun flash physique ni démarrage sur microSD de ce fichier v4,
+donc aucune installation eMMC ou image/son réelle validée à partir de v4.
+L'eMMC BELABOX existante n'a pas été modifiée pendant cette construction.
+
 ## Essai matériel
 
 | Étape | Résultat |
