@@ -43,7 +43,11 @@ la console et le journal du service.
    retirer la carte durant la copie ni pendant la vérification.
 5. Retirer la microSD, brancher la Pocket 3 sur un port USB de données,
    sélectionner **webcam** sur son écran, puis rallumer. La vidéo et le son
-   doivent démarrer sans assistant de configuration.
+   doivent démarrer sans assistant de configuration. Si la caméra revient en
+   mode transfert de fichiers après un redémarrage, débrancher puis rebrancher
+   son câble USB et sélectionner à nouveau « webcam ». Vérifier une image
+   mobile et le son sur l'écran ; le redémarrage autonome de la caméra n'a pas
+   encore été démontré.
 
 Il n'y a **aucun mot de passe ou clé SSH fournis**. SSH est désactivé par défaut.
 Cette édition est dédiée à un appareil de sortie vidéo autonome ; l'accès de

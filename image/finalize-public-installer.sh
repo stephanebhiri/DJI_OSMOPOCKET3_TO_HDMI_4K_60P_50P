@@ -57,7 +57,7 @@ printf 'osmo2hdmi\n' >"$root/etc/hostname"
 printf '%s\n' \
     'Public Orange Pi 5 Plus microSD to eMMC installer' \
     'No login or SSH enabled by default' \
-    'Pocket 3 video and HDMI audio start after installation and SD removal' \
+    'After SD removal, select Pocket 3 webcam mode; verify moving picture and HDMI audio' \
     >"$root/usr/share/doc/dji-osmo2hdmi/device-build.txt"
 
 critical=(
