@@ -63,6 +63,7 @@ printf '%s\n' \
 critical=(
     boot/armbianEnv.txt
     usr/local/bin/dji-stream.sh
+    root/.spspps/0
     usr/local/bin/osmo-hdmi50.sh
     usr/local/bin/dji-hdmi-audio.sh
     usr/local/bin/parse-hdmi-mode.sh

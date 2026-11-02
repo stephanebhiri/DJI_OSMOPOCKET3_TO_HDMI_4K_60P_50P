@@ -22,6 +22,8 @@ printf 'extraargs=usbcore.quirks=2ca3:0023:i cma=256M\n' >"$root/boot/armbianEnv
 for name in dji-stream.sh osmo-hdmi50.sh dji-hdmi-audio.sh parse-hdmi-mode.sh parse-encoder-mask.sh parse-kms-plane.py; do
     printf 'test source %s\n' "$name" >"$root/usr/local/bin/$name"
 done
+mkdir -p "$root/root/.spspps"
+cp "$(dirname "$0")/known-good-belabox-2026-11-02/pocket3-4k50.spspps" "$root/root/.spspps/0"
 for name in dji-h264-stream osmo-hdmi50 dji-hdmi-audio ssh; do
     printf 'unit\n' >"$root/etc/systemd/system/$name.service"
     ln -s "../$name.service" "$root/etc/systemd/system/multi-user.target.wants/$name.service"

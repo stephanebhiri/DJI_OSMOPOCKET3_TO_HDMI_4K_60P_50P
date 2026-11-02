@@ -1,7 +1,11 @@
 # Installateur public microSD → eMMC (Orange Pi 5 Plus)
 
-**État : image candidate en construction, aucun téléchargement public validé à ce jour.**
-La procédure ci-dessous décrit l'installateur en cours de test. Ne pas utiliser
+**État : candidat local construit, aucun téléchargement public validé à ce jour.**
+Le candidat `v3` a passé ses contrôles de construction et de fichier, mais
+**n'a pas été redémarré sur microSD réelle**. Il précède aussi la correction
+de fluidité `kmssink sync=false` et de cache H.264 SPS/PPS du 2 novembre 2026 : il faut le reconstruire
+et le tester de bout en bout avant tout téléchargement public. La procédure
+ci-dessous décrit l'installateur en cours de test. Ne pas utiliser
 les anciennes images des releases v1/v2 ni l'image personnelle BELABOX comme
 substitut : elles ne correspondent pas à cet installateur.
 

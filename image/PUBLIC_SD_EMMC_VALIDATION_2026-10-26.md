@@ -40,12 +40,25 @@ alors cette carte avant toute écriture eMMC. Le test de finalisation reproduit
 désormais cette liaison réelle et impose son masquage. Correction source :
 `93a575a`.
 
-## Candidat corrigé à reconstruire
+## Candidat v3 construit, mais non validé sur matériel
 
 La deuxième construction a été interrompue dès la découverte du
 redimensionnement Armbian ; aucun artefact de cette tentative n'a été utilisé.
-La prochaine image doit intégrer les deux corrections. SHA-256 et nouvel essai
-matériel seront ajoutés après production du fichier.
+La troisième construction a intégré les deux corrections et produit localement
+`OSMO2HDMI-OrangePi5Plus-public-SD-eMMC-v3.img.gz` : 1 564 545 605 octets,
+SHA-256 `73f5247b4ed042c167eb3e00148fce9728f105036ca7c730bc870b4cf0d7e948`.
+L'audit de la racine a réussi, `e2fsck` final n'a pas signalé d'erreur, la
+compression Gzip a été contrôlée et l'empreinte a correspondu après transfert
+au Mac. **Ce fichier n'a pas été gravé ni démarré sur l'Orange Pi.**
+
+Le 2 novembre 2026, le diagnostic de la BELABOX eMMC a révélé que la vidéo
+de ce candidat, construite avec `kmssink sync=true`, serait probablement
+saccadée sur le matériel testé. Un cache H.264 SPS/PPS corrompu a également
+causé des barres de couleur malgré le son. Les sources actuelles utilisent
+`sync=false` et embarquent les 39 octets SPS/PPS restaurés et confirmés sur
+la BELABOX. Le fichier v3 existant est immuable et précède ces corrections.
+**Ne pas le publier ni l'utiliser comme image finale** ; reconstruire à partir de la
+source corrigée, puis refaire l'essai microSD → eMMC complet.
 
 ## Essai matériel
 

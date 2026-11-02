@@ -45,7 +45,7 @@ dji_provision() {
   local rockchip="$DJI_SOURCE_ROOT/gstreamer-rockchip" uvc="$DJI_SOURCE_ROOT/gstlibuvch264src"
   [[ "$(uname -m)" == aarch64 ]] || { echo 'ARM64 build environment required' >&2; return 1; }
   grep -q 'VERSION_CODENAME=noble' /etc/os-release || { echo 'Ubuntu Noble required' >&2; return 1; }
-  for path in "$project/dji-stream.sh" "$mpp/CMakeLists.txt" "$rockchip/meson.build" "$uvc/libuvc/CMakeLists.txt"; do
+  for path in "$project/dji-stream.sh" "$project/image/known-good-belabox-2026-11-02/pocket3-4k50.spspps" "$mpp/CMakeLists.txt" "$rockchip/meson.build" "$uvc/libuvc/CMakeLists.txt"; do
     [[ -f "$path" ]] || { echo "Missing source: $path" >&2; return 1; }
   done
 
@@ -103,6 +103,12 @@ dji_provision() {
   install -m 644 "$project/99-dji-camera.rules" /etc/udev/rules.d/
   install -m 755 "$project/dji-stream.sh" /usr/local/bin/dji-stream.sh
   install -m 644 "$project/dji-h264-stream.service" /etc/systemd/system/
+  # A corrupt cached SPS/PPS previously left audio running without picture.
+  # Preserve the 4K50 pair recovered from the working Pocket 3 installation.
+  install -d -m 700 /root/.spspps
+  if [[ -e /root/.spspps/0 ]]; then chattr -i /root/.spspps/0; fi
+  install -m 644 "$project/image/known-good-belabox-2026-11-02/pocket3-4k50.spspps" /root/.spspps/0
+  chattr +i /root/.spspps/0
   install -m 755 "$project/image/parse-hdmi-mode.sh" /usr/local/bin/parse-hdmi-mode.sh
   install -m 755 "$project/image/parse-encoder-mask.sh" /usr/local/bin/parse-encoder-mask.sh
   install -m 755 "$project/image/parse-kms-plane.py" /usr/local/bin/parse-kms-plane.py

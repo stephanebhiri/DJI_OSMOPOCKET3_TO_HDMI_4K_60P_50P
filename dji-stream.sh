@@ -19,4 +19,4 @@ plane_id=$(/usr/bin/modetest -M rockchip -p | /usr/bin/python3 /usr/local/bin/pa
 exec /usr/bin/gst-launch-1.0 --no-fault \
     libuvch264src index=0 ! video/x-h264,width=3840,height=2160,framerate=50/1 ! \
     h264parse ! mppvideodec ! \
-    kmssink connector-id="$connector_id" plane-id="$plane_id" sync=true restore-crtc=false
+    kmssink connector-id="$connector_id" plane-id="$plane_id" sync=false restore-crtc=false

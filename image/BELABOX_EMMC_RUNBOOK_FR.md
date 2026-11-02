@@ -16,8 +16,9 @@ pour éviter de reconstruire ces corrections de mémoire.
 - HDMI-A-2 : sortie 1920×1080i à 50 Hz, son du micro de la Pocket 3 sur HDMI.
   Le connecteur et le numéro de mode EDID sont découverts à chaque démarrage.
 - Vidéo : `libuvch264src` → `h264parse` → `mppvideodec` → `kmssink` sur le plan
-  KMS 114, compatible NV12. Le 3840×2160 H.264 à 50 images/s est décodé puis
-  mis à l'échelle pour la sortie entrelacée.
+  KMS 114, compatible NV12, avec `sync=false` sur la machine testée le
+  2 novembre. Le 3840×2160 H.264 à 50 images/s est décodé puis mis à
+  l'échelle pour la sortie entrelacée.
 
 Les versions et révisions des composants sont figées dans
 [`source-lock.txt`](source-lock.txt). Les images de téléchargement d'octobre 2026
@@ -30,10 +31,13 @@ SSH de maintenance et ne doit pas être publiée.
 | Symptôme | Cause constatée | Correction conservée |
 | --- | --- | --- |
 | 4K50 refusé après un essai 1080p30, parfois image figée | Le fork BELABOX de libuvc comparait aussi `dwMaxPayloadTransferSize`. La Pocket 3 renvoyait un `GET_MAX` périmé de `622080` avant de négocier `2488320`. | [`belabox-uvc-stale-payload.patch`](patches/belabox-uvc-stale-payload.patch) compare format, image et intervalle ; reconstruire libuvc. Test 1080p30→4K50 réussi. |
-| Flux décodé mais pas d'image HDMI | Le plan KMS choisi automatiquement ne convenait pas au NV12 4K. | `plane-id=114` dans [`dji-stream.sh`](../dji-stream.sh). Vérifier que le plan actif reçoit un framebuffer NV12. |
+| Flux décodé mais pas d'image HDMI | Le plan KMS choisi automatiquement ne convenait pas au NV12 4K lors du premier essai. | `plane-id=114` dans le [script exact de la BELABOX](known-good-belabox-2026-11-02/dji-stream.sh). Vérifier que le plan actif reçoit un framebuffer NV12. La source générale cherche un plan compatible. |
 | Service vidéo arrêté après reconnexions | La règle udev relançait le service pour chaque nœud `video4linux` ; la limite systemd était atteinte. | [`99-dji-camera.rules`](../99-dji-camera.rules) relance une seule fois à l'ajout du périphérique USB ; [`dji-h264-stream.service`](../dji-h264-stream.service) autorise les nouvelles tentatives. |
 | 1080i50 sélectionné puis retour en 1080p60 | La console framebuffer reprenait le CRTC après `modetest -d` et restaurait son mode préféré. | [`osmo-hdmi50.sh`](osmo-hdmi50.sh) détache la console framebuffer avant de régler le mode. Le plan vidéo est ensuite utilisable par GStreamer. |
 | Après un démarrage à froid, le service vidéo semblait actif mais aucun plan vidéo n'était affiché | `gst-launch-1.0` avait reçu SIGSEGV au premier lancement, puis son gestionnaire de défaut attendait un débogueur : systemd voyait encore un processus actif et ne redémarrait pas. Un redémarrage du service a immédiatement rétabli le flux. | `gst-launch-1.0 --no-fault` laisse le processus mourir en cas de nouveau défaut ; `Restart=always` le relance. Au démarrage à froid final, le premier lancement a encore subi SIGSEGV, puis systemd a rétabli seul l'image et le son. La cause interne du plantage reste à identifier. |
+| Le moniteur indiquait 1080i50, mais le mouvement était saccadé | La Pocket 3 et le décodeur fournissaient chacun environ 50 images/s ; avec `kmssink sync=true`, le plan HDMI ne changeait qu'environ 19 fois/s. | `sync=false` a porté le plan à 49,82 changements/s sur 5 s ; le propriétaire a confirmé l'amélioration à l'écran le 2 novembre. Ne pas déduire la fluidité de la seule étiquette « 1080i50 ». |
+| Après redémarrage et reconnexion en mode webcam, barres de couleur avec son présent | Le cache H.264 `/root/.spspps/0` contenait 1 022 octets avec des SPS/PPS invalides ; la source fournissait environ 50 tampons/s mais le décodeur ne rendait aucune image. Les valeurs par défaut du plugin n'ont pas corrigé le problème. | Remettre les [39 octets validés](known-good-belabox-2026-11-02/pocket3-4k50.spspps) de l'image eMMC du 26 octobre, puis relancer uniquement le service vidéo. Sur la machine vérifiée, le fichier est protégé par `chattr +i`. Voir la [procédure précise](known-good-belabox-2026-11-02/README.md). |
+| Son annoncé actif mais inaudible | Le micro USB avait un signal ; la sortie HDMI et le moniteur ont joué une tonalité de test. La cause exacte du ressenti initial n'a pas été isolée. | Le script audio a été remis à l'unité, **sans gain** ; le propriétaire a ensuite confirmé entendre correctement le micro. Ne pas ajouter un gain fixe qui pourrait saturer. |
 | Reflash microSD suivi de corruption ext4 et binaire libuvc altéré | La microSD d'essai était instable. Un contrôle `e2fsck` hors montage et une comparaison SHA-256 ont révélé la corruption. | Ne pas la cloner. L'image eMMC provient d'une **autre** carte USB, contrôlée avec `e2fsck` et SHA-256, puis relue intégralement après flash. |
 | Après extinction, ancien système BELABOX au lieu du nouveau | Le démarrage repartait de l'eMMC BELABOX tant que la nouvelle image n'y était pas installée. | Écrire directement l'image corrigée sur l'eMMC en MaskROM et vérifier `findmnt /`. |
 
@@ -47,6 +51,11 @@ ensuite les services, les scripts HDMI et audio et les règles udev. Ne pas
 remplacer le noyau fournisseur 6.1.115/GStreamer 1.24 sans refaire tous les
 tests matériels. Le script de finalisation de l'image personnelle est
 [`finalize-runtime-image.sh`](finalize-runtime-image.sh).
+
+Pour reproduire **exactement les deux scripts de la BELABOX qui marchait le
+2 novembre**, utiliser leur [copie relevée sur l'eMMC](known-good-belabox-2026-11-02/).
+Le script vidéo général du dépôt découvre le plan KMS automatiquement ; ce
+chemin n'a pas encore subi le même essai physique avec `sync=false`.
 
 Avant de fabriquer une nouvelle image, vérifier au minimum :
 
@@ -117,6 +126,16 @@ framebuffer est détachée (`/sys/class/vtconsole/vtcon*/bind`) et relancer
 `osmo-hdmi50.service` **après avoir arrêté** `dji-h264-stream.service` qui
 occupe le périphérique DRM. Si le périphérique USB manque, rebrancher la
 Pocket 3 et confirmer le choix « webcam » sur son écran.
+
+Lors du redémarrage logiciel du 2 novembre, la Pocket 3 était encore branchée
+mais a d'abord présenté l'identifiant `2ca3:0020` (**transfert de fichiers**).
+Le propriétaire précise que sa procédure habituelle consiste à **débrancher
+puis rebrancher le câble USB après chaque redémarrage**, puis à sélectionner
+« webcam » si demandé. Ce geste n'avait pas encore eu lieu lors du premier
+contrôle après reboot. Après reconnexion, le cache H.264 erroné a empêché
+l'affichage jusqu'à la restauration des 39 octets validés. Vérifier `lsusb`,
+le SHA-256 du cache et le plan KMS **après** ce geste avant de juger la vidéo.
+Le démarrage autonome de la caméra reste non démontré.
 
 ## Capacité eMMC et conservation
 
