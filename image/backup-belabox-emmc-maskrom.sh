@@ -23,7 +23,7 @@ rktool="$(cd "$(dirname "$rktool")" && pwd)/$(basename "$rktool")"
 loader="$(cd "$(dirname "$loader")" && pwd)/$(basename "$loader")"
 prefix="$(cd "$(dirname "$prefix")" && pwd)/$(basename "$prefix")"
 cd "$(dirname "$prefix")"    # rkdeveloptool keeps its own log/ beside the output
-for suffix in .img .img.part .img.gz .img.gz.part .sha256 .chunks.sha256; do
+for suffix in .img .img.part .img.gz .img.gz.part .img.gz.sha256 .sha256 .chunks.sha256; do
   [[ ! -e ${prefix}${suffix} ]] || { echo "Refusing to overwrite ${prefix}${suffix}" >&2; exit 2; }
 done
 available_kib=$(df -Pk "$(dirname "$prefix")" | awk 'END {print $4}')

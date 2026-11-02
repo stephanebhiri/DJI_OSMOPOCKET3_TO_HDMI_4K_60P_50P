@@ -60,6 +60,10 @@ dépôt `image/backup-belabox-emmc-maskrom.sh` sans argument : le script trouve
 le programme et le chargeur déjà présents dans le dossier parent et place
 l'archive datée à cet endroit. Sur un autre Mac, lui passer explicitement le
 programme, le chargeur et le préfixe de sortie (voir son message d'usage).
+La copie couvre les 6 Gio amorçables et toute la partition racine actuelle,
+pas l'en-tête GPT secondaire situé à la fin de l'eMMC de 64 Go. Après une
+éventuelle restauration, replacer cet en-tête comme dans la
+[procédure détaillée](BELABOX_EMMC_RUNBOOK_FR.md).
 
 ## Contrôle après installation
 
