@@ -109,3 +109,28 @@ write is still unproven. Automatic camera recovery has **not** been
 demonstrated. A cold power cycle has not yet been repeated
 with this cache protection and the 2 November `sync=false` change. The exact installed scripts and cache are preserved in
 [`known-good-belabox-2026-11-02/`](known-good-belabox-2026-11-02/).
+
+## 2 November: read-only audit after preparing the future installer
+
+The existing BELABOX was inspected without restarting services or altering
+USB/HDMI connections. Its root remains `/dev/mmcblk0p1` ext4 on the 61.9 GB
+eMMC, with a 6.42 GB root partition. The Pocket 3 enumerated as `2ca3:0023`,
+all three services were active, DRM reported `1920x1080i50`, and plane 114 held
+an NV12 framebuffer. ALSA capture `DJIPocket3` and playback `rockchiphdmi1`
+were both `RUNNING`. The read-only checker
+[`verify-runtime.sh`](verify-runtime.sh) measured **48.8 framebuffer changes/s**
+over three seconds and returned `RESULTAT OK`.
+
+SHA-256 of the installed video, HDMI and audio scripts, the SPS/PPS cache,
+three service units and three udev rules matched the corresponding files in
+this repository byte for byte. The cache retained its immutable attribute.
+The general source script uses dynamic KMS discovery, unlike the installed
+script's fixed plane 114. Its three parsers were run against the **actual**
+`modetest` connector, encoder and plane output from this BELABOX and selected
+connector 236, EDID mode 13, encoder 235, CRTC mask `0x00000002` and plane
+**114**. This checks the selection logic without replacing the running video
+service. The no-gain audio source matches the installed script exactly.
+
+This audit supports source-to-device consistency. It is **not** a cold boot of
+the new v4 microSD installer and does not substitute for one physical image
+and sound check after a future installation.

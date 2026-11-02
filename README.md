@@ -28,6 +28,7 @@ sont conservés séparément de la source générale destinée à plusieurs cart
 
 | Besoin | Document |
 | --- | --- |
+| Installer une autre Orange Pi 5 Plus et contrôler le résultat | [Installation rapide et diagnostic](image/INSTALLATION_RAPIDE_FR.md) |
 | Comprendre pourquoi l'installation a échoué puis fonctionné | [Procédure et diagnostic BELABOX](image/BELABOX_EMMC_RUNBOOK_FR.md) |
 | Voir exactement ce qui a été testé sur eMMC | [Compte rendu du 26 octobre et du 2 novembre 2026](image/BELABOX_VALIDATION_2026-10-26.md) |
 | Reconstruire les composants logiciels | [Versions figées](image/source-lock.txt) et [provisionnement ARM64 Noble](image/provision-rootfs.sh) |
