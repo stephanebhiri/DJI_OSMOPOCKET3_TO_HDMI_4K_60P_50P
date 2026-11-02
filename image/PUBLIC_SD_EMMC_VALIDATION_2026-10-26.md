@@ -75,6 +75,10 @@ source corrigée, puis refaire l'essai microSD → eMMC complet.
   attribut immuable présent, script vidéo avec `sync=false`.
 - Décompression complète de l'archive : SHA-256 identique à celui du brut.
   Copie sur Mac : SHA-256 identique à l'archive de construction.
+- Archive et fichier SHA-256 téléversés dans la release GitHub **en brouillon**
+  `v4-sd-emmc-candidate-2026-11-02`. GitHub rapporte l'asset à
+  1 532 930 713 octets et le digest SHA-256 identique. Ce brouillon n'est
+  pas une publication finale.
 
 **Limite :** aucun flash physique ni démarrage sur microSD de ce fichier v4,
 donc aucune installation eMMC ou image/son réelle validée à partir de v4.
