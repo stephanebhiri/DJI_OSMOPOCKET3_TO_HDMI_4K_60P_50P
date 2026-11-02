@@ -45,3 +45,24 @@ hors ligne. **Son flash et son démarrage physique n'ont pas encore été testé
 Le démarrage de l'eMMC originale après capture a été confirmé avec image et
 son. L'installateur public microSD v4 reste un candidat distinct, qui nécessite
 sa propre validation matérielle.
+
+## Contrôle des identifiants inclus
+
+L'archive de secours a été récupérée de R2 et vérifiée par SHA-256 pour un
+contrôle hors ligne le 2 novembre. `/root/.ssh` contient une seule clé
+**publique** dans `authorized_keys`, correspondant à `id_ed25519.pub` du Mac.
+La clé privée du Mac n'y figure pas. Les clés privées détectées dans `/root`,
+`/etc` et `/usr/local` sont les trois clés d'identité SSH du serveur de cette
+Orange Pi (`ssh_host_*_key`). Le mot de passe root est verrouillé ; `/home`,
+`/opt`, `/var/lib/private` et `/var/lib/git` sont vides. Aucune configuration
+Wi-Fi avec mot de passe, clé privée de connexion à une autre machine, ni
+identifiant cloud n'a été détecté dans les configurations et scripts examinés.
+Ce contrôle porte sur les fichiers actifs de ces emplacements, pas sur une
+recherche forensique dans les blocs supprimés du système de fichiers.
+
+La clé publique de maintenance peut aussi être autorisée sur d'autres
+machines : sa présence ne permet pas de s'y connecter sans la clé privée
+conservée sur le Mac. Pour distribuer une image à d'autres personnes, utiliser
+la finalisation publique du dépôt, qui retire les autorisations personnelles
+et les clés d'identité SSH héritées. Une copie personnelle restaurée sur
+plusieurs appareils conserverait autrement la même identité SSH.
