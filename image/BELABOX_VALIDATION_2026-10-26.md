@@ -134,3 +134,27 @@ service. The no-gain audio source matches the installed script exactly.
 This audit supports source-to-device consistency. It is **not** a cold boot of
 the new v4 microSD installer and does not substitute for one physical image
 and sound check after a future installation.
+
+## 2 November: offline eMMC capture and private rescue copy
+
+With the board stopped in MaskROM (`2207:350b`), the read-only
+[`backup-belabox-emmc-maskrom.sh`](backup-belabox-emmc-maskrom.sh) selected the
+61.9 GB eMMC and read its first 6 GiB in twelve 512 MiB chunks. This includes
+the complete current root partition. The exact raw capture has SHA-256
+`68a694f8cf87ca67668792800179839c52f8f050f105a33290a8c9aabbd240f5`;
+its gzip archive was decompressed and compared to that raw digest. No eMMC
+write command was issued. These files are private and stored outside Git.
+
+The exact capture has an ext4 journal needing replay after the hard stop and
+refers to a GPT backup header at the end of the 64 GB eMMC, beyond a 6 GiB
+file. On an independent copy in a Linux VM, `e2fsck -fy` replayed the journal
+and corrected free block and inode counts; a subsequent `e2fsck -fn` returned
+clean. `sgdisk -e` placed a valid secondary GPT at the end of the 6 GiB copy;
+`sgdisk -v` reported no partition-table problems. The three installed video,
+HDMI and audio scripts and the SPS/PPS cache in that copy have exactly the
+SHA-256 values recorded in the live audit above. The resulting private rescue
+archive is `OSMO2HDMI-BELABOX-working-2026-11-02-rescue.img.gz`, SHA-256
+`5faaa6ba4de4c4e332f1c3e7818cde8a1acaf50619b5293390d2`. Its
+decompressed raw SHA-256 is
+`af99d7f18547e623772d01c94809a87ee6e5a265bffb157c941f57a9dded3841`.
+This is a verified offline rescue candidate, **not a physically tested restore**.

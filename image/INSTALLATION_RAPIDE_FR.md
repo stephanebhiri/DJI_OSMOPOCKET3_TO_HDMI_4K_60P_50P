@@ -40,21 +40,30 @@ sur une autre Orange Pi**. La première réussite physique reste à consigner.
 
 Le [guide MaskROM](BELABOX_EMMC_RUNBOOK_FR.md) décrit le port USB-C de données,
 le chargeur RK3588, la sélection de l'eMMC et la comparaison après écriture.
-**Il manque encore un cliché hors ligne de l'eMMC actuellement fonctionnelle.**
-Le seul brut local de 6 Gio date d'avant les corrections finales du 2 novembre ;
-il exige de réinstaller les scripts et le cache du dossier `known-good`.
+Un cliché hors ligne de l'eMMC fonctionnelle a été lu le 2 novembre, après
+les corrections vidéo et audio. Son archive privée est
+`/Users/stephane/OSMO2HDMI/OSMO2HDMI-BELABOX-working-2026-11-02.img.gz`.
+Elle conserve les octets tels que lus, avec le journal ext4 à rejouer et
+l'en-tête GPT secondaire au bout de l'eMMC de 64 Go, hors du cliché de 6 Gio.
+Pour une restauration plus simple, utiliser plutôt la copie privée
+`/Users/stephane/OSMO2HDMI/OSMO2HDMI-BELABOX-working-2026-11-02-rescue.img.gz` :
+son ext4 a été réparé et vérifié, et sa GPT secondaire replacée à la fin des
+6 Gio. SHA-256 de cette archive :
+`5faaa6ba4de4c4e332f1c3e7818cde8a1acaf50619b5293390d2`.
+La décompression redonne le SHA-256 brut
+`af99d7f18547e623772d01c94809a87ee6e5a265bffb157c941f57a9dded3841`.
+**Cette copie de secours n'a pas encore été reflashée et démarrée physiquement.**
+Elle contient la clé SSH privée de la machine et reste hors GitHub.
 Le candidat microSD v4 ne doit pas être écrit tel quel sur l'eMMC : il contient
 le service d'installation prévu pour un démarrage depuis microSD et refuserait
 de se lancer depuis l'eMMC.
 
-Pour constituer **une fois** un secours exact de la BELABOX actuellement
-fonctionnelle, le script en lecture seule
+Pour refaire la capture en lecture seule sur une BELABOX fonctionnelle, le script
 [`backup-belabox-emmc-maskrom.sh`](backup-belabox-emmc-maskrom.sh) est prêt.
 Il exige un arrêt de la carte et un branchement MaskROM au Mac ; il refuse
 les autres capacités eMMC et lit les 6 Gio contenant la partition racine.
 Il ne lance aucune commande d'écriture sur l'eMMC. L'archive et son SHA-256
-restent privés et locaux. **Cette capture n'a pas encore été effectuée** ;
-les seuls scripts copiés ne remplacent pas cette sauvegarde exacte.
+restent privés et locaux.
 Sur ce Mac, une fois la carte passée en MaskROM, lancer depuis la racine du
 dépôt `image/backup-belabox-emmc-maskrom.sh` sans argument : le script trouve
 le programme et le chargeur déjà présents dans le dossier parent et place
