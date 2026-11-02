@@ -23,6 +23,10 @@ restauration. Les anciennes images ne sont **pas** une sauvegarde de
 l'installation actuelle.
 Les [scripts exacts relevés sur la BELABOX fonctionnelle](image/known-good-belabox-2026-11-02/)
 sont conservés séparément de la source générale destinée à plusieurs cartes.
+Les archives personnelles de l'eMMC sont conservées dans **R2 privé**, avec
+une [procédure de récupération](image/SAUVEGARDE_R2_FR.md). Les blocs des deux
+archives ont été téléchargés et vérifiés par SHA-256 avant le retrait des
+grosses copies locales.
 
 ## Par où commencer
 

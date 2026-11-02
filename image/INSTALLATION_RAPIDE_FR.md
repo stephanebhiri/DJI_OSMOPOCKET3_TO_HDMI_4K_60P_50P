@@ -41,12 +41,15 @@ sur une autre Orange Pi**. La première réussite physique reste à consigner.
 Le [guide MaskROM](BELABOX_EMMC_RUNBOOK_FR.md) décrit le port USB-C de données,
 le chargeur RK3588, la sélection de l'eMMC et la comparaison après écriture.
 Un cliché hors ligne de l'eMMC fonctionnelle a été lu le 2 novembre, après
-les corrections vidéo et audio. Son archive privée est
-`/Users/stephane/OSMO2HDMI/OSMO2HDMI-BELABOX-working-2026-11-02.img.gz`.
+les corrections vidéo et audio. Les deux archives privées sont désormais dans
+R2, bucket `osmo2hdmi-backups`, préfixe `belabox/2026-11-02/`.
+Suivre la [récupération depuis R2](SAUVEGARDE_R2_FR.md) pour les télécharger ;
+les grosses copies locales ont été retirées après vérification du téléchargement.
+L'archive exacte est `OSMO2HDMI-BELABOX-working-2026-11-02.img.gz`.
 Elle conserve les octets tels que lus, avec le journal ext4 à rejouer et
 l'en-tête GPT secondaire au bout de l'eMMC de 64 Go, hors du cliché de 6 Gio.
 Pour une restauration plus simple, utiliser plutôt la copie privée
-`/Users/stephane/OSMO2HDMI/OSMO2HDMI-BELABOX-working-2026-11-02-rescue.img.gz` :
+`OSMO2HDMI-BELABOX-working-2026-11-02-rescue.img.gz` :
 son ext4 a été réparé et vérifié, et sa GPT secondaire replacée à la fin des
 6 Gio. SHA-256 de cette archive :
 `5faaa6ba4de4c4e332f1c3e7818cde8a1acaf50619b5293390d2`.

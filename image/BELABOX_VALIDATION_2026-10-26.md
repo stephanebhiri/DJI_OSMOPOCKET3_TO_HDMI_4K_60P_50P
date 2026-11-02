@@ -166,3 +166,15 @@ after capture. The last network check at its previous address
 `192.168.75.50` did not connect, so no new SSH measurements are claimed for
 this boot. This observation does not test flashing the rescue image or the
 public v4 installer.
+
+## 2 November: private off-Mac storage
+
+Both gzip archives were uploaded to private R2 bucket `osmo2hdmi-backups`,
+prefix `belabox/2026-11-02/`, in blocks no larger than 256 MiB. Each block was
+downloaded and compared by SHA-256; the ordered downloaded bytes also matched
+each complete archive's SHA-256 above. The bucket's public r2.dev access is
+disabled and no custom domain is connected. The uploaded manifest and recovery
+script were downloaded and compared with their local originals. Checksums and
+recovery instructions are stored alongside the blocks. The three large local
+files (raw capture and two gzip archives, 8.9 GiB) were removed after these
+checks. See [recovery instructions](SAUVEGARDE_R2_FR.md).
