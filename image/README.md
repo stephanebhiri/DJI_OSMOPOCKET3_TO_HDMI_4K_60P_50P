@@ -13,6 +13,18 @@ installateur. Ne pas utiliser
 les anciennes images des releases v1/v2 ni l'image personnelle BELABOX comme
 substitut : elles ne correspondent pas à cet installateur.
 
+## Choisir le chemin d'installation
+
+| Situation | Fichier et procédure disponibles | Limite actuelle |
+| --- | --- | --- |
+| MicroSD utilisable | Le candidat v4 ci-dessus, à écrire sur microSD puis à démarrer sur l'Orange Pi 5 Plus. | Le premier démarrage et la copie eMMC de v4 restent à confirmer sur matériel. |
+| Aucune microSD | Le [guide MaskROM](BELABOX_EMMC_RUNBOOK_FR.md) explique le port USB-C de données, la sélection de l'eMMC et la vérification après écriture. | Le seul brut mentionné dans ce guide est une ancienne image **personnelle**, antérieure aux corrections du 2 novembre. Le candidat v4 est un installateur conçu pour démarrer sur microSD : le flasher directement sur eMMC ne constitue pas une installation validée. Aucune image publique directe eMMC à jour n'est encore produite. |
+
+Les sources, scripts exacts de la BELABOX fonctionnelle, cache SPS/PPS et
+diagnostics sont dans ce dépôt. Ils suffisent à **reconstruire et diagnostiquer**
+la configuration actuelle ; ils ne remplacent pas les essais matériels des
+deux chemins ci-dessus.
+
 ## Ce que fait la carte
 
 La carte microSD contient Armbian Ubuntu Noble, les bibliothèques Rockchip MPP,
